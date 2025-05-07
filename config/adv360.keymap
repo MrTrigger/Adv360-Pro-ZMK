@@ -36,6 +36,16 @@
             tapping-term-ms = <200>;
             flavor = "tap-preferred";
         };
+
+        smart_layer: smart_layer {
+            compatible = "zmk,behavior-hold-tap";
+            label = "SMART_LAYER";
+            bindings = <&mo>, <&tog>;
+
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+            flavor = "tap-preferred";
+        };
     };
 
     keymap {
@@ -44,11 +54,11 @@
         default_layer {
             display-name = "Base";
             bindings = <
-&kp EQUAL  &kp N1              &kp N2          &kp N3       &kp N4            &kp N5  &tog 1                                                                      &mo 3      &kp N6     &kp N7        &kp N8       &kp N9           &kp N0               &kp MINUS
-&kp TAB    &kp B               &kp L           &kp D        &kp W             &kp Z   &none                                                                       &none      &kp MINUS  &kp F         &kp O        &kp U            &kp J                &kp BSLH
-&kp ESC    &hm LEFT_COMMAND N  &hm LEFT_ALT R  &hm LCTRL T  &hm LEFT_SHIFT S  &kp G   &kp LEFT_COMMAND  &super_copy LC(V) 0  &kp CARET      &kp LGUI   &kp RCTRL  &none      &kp Y      &hm RSHIFT H  &hm RCTRL A  &hm RIGHT_ALT E  &hm RIGHT_COMMAND I  &kp SQT
-&kp LSHFT  &kp Q               &kp X           &kp M        &kp C             &kp V                                          &kp HOME       &kp PG_UP                        &kp K      &kp P         &kp COMMA    &kp DOT          &kp FSLH             &kp RSHFT
-&mo 2      &kp GRAVE           &kp CAPS        &kp LEFT     &kp RIGHT                 &kp BSPC          &kp DEL              &kp END        &kp PG_DN  &kp ENTER  &kp SPACE             &kp UP        &kp DOWN     &kp LBKT         &kp RBKT             &mo 2
+&kp EQUAL  &kp N1              &kp N2          &kp N3       &kp N4            &kp N5  &tog 1                                                                             &mo 3      &kp N6     &kp N7        &kp N8       &kp N9           &kp N0               &kp MINUS
+&kp TAB    &kp B               &kp L           &kp D        &kp W             &kp Z   &none                                                                              &none      &kp MINUS  &kp F         &kp O        &kp U            &kp J                &kp BSLH
+&kp ESC    &hm LEFT_COMMAND N  &hm LEFT_ALT R  &hm LCTRL T  &hm LEFT_SHIFT S  &kp G   &kp LEFT_COMMAND  &kp DELETE        &super_copy CARET 0      &kp LGUI   &kp RCTRL  &none      &kp Y      &hm RSHIFT H  &hm RCTRL A  &hm RIGHT_ALT E  &hm RIGHT_COMMAND I  &kp SQT
+&kp LSHFT  &kp Q               &kp X           &kp M        &kp C             &kp V                                       &kp HOME                 &kp PG_UP                        &kp K      &kp P         &kp COMMA    &kp DOT          &kp FSLH             &kp RSHFT
+&mo 2      &kp GRAVE           &kp CAPS        &kp LEFT     &kp RIGHT                 &kp BSPC          &smart_layer 4 4  &kp END                  &kp PG_DN  &kp ENTER  &kp SPACE             &kp UP        &kp DOWN     &kp LBKT         &kp RBKT             &mo 2
             >;
         };
 
@@ -87,6 +97,17 @@
 
         symbols {
             display-name = "symbols";
+            bindings = <
+&trans  &trans     &trans            &trans             &trans          &trans       &tog 1                                      &mo 3   &trans           &kp LESS_THAN         &kp GREATER_THAN       &trans         &trans     &trans
+&trans  &kp CARET  &kp HASH          &kp AT_SIGN        &kp ASTERISK    &kp PERCENT  &none                                       &none   &kp BACKSLASH    &kp LEFT_BRACE        &kp RIGHT_BRACE        &kp SEMICOLON  &kp PLUS   &trans
+&trans  &kp TILDE  &kp QUESTION      &kp AMPERSAND      &kp EQUAL       &kp DOLLAR   &none   &trans  &trans      &trans  &trans  &none   &kp SLASH        &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &kp COLON      &kp MINUS  &trans
+&trans  &trans     &kp SINGLE_QUOTE  &kp DOUBLE_QUOTES  &kp UNDERSCORE  &kp PIPE                     &trans      &trans                  &kp EXCLAMATION  &kp LEFT_BRACKET      &kp RIGHT_BRACKET      &kp COMMA      &kp DOT    &trans
+&trans  &trans     &trans            &trans             &trans                       &trans  &sl 0   &trans      &trans  &trans  &trans                   &trans                &trans                 &trans         &trans     &trans
+            >;
+        };
+
+        vim {
+            display-name = "vim";
             bindings = <
 &trans  &trans  &trans  &trans  &trans  &trans  &tog 1                                      &mo 3   &trans  &trans  &trans  &trans  &trans  &trans
 &trans  &trans  &trans  &trans  &trans  &trans  &none                                       &none   &trans  &trans  &trans  &trans  &trans  &trans
