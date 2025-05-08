@@ -47,42 +47,42 @@
             flavor = "tap-preferred";
         };
 
-        sv_ao_small: å {
+        sv_ao_small: sv_ao_small {
           compatible = "zmk,behavior-unicode";
           label = "å";
           #binding-cells = <0>;
           unicode = <0x00E5>; // å
         };
 
-        sv_ao: Å {
+        sv_ao: sv_ao {
           compatible = "zmk,behavior-unicode";
           label = "Å";
           #binding-cells = <0>;
           unicode = <0x00C5>; // Å
         };
 
-        sv_ae_small: ä {
+        sv_ae_small: sv_ae_small {
           compatible = "zmk,behavior-unicode";
           label = "ä";
           #binding-cells = <0>;
           unicode = <0x00E4>; // ä
         };
 
-        sv_ae: Ä {
+        sv_ae: sv_ae {
           compatible = "zmk,behavior-unicode";
           label = "Ä";
           #binding-cells = <0>;
           unicode = <0x00C4>; // Ä
         };
 
-        sv_oe_small: ö {
+        sv_oe_small: sv_oe_small {
           compatible = "zmk,behavior-unicode";
           label = "ö";
           #binding-cells = <0>;
           unicode = <0x00F6>; // ö
         };
 
-        sv_oe: Ö {
+        sv_oe: sv_oe {
           compatible = "zmk,behavior-unicode";
           label = "Ö";
           #binding-cells = <0>;
