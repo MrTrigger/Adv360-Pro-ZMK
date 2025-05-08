@@ -222,3 +222,34 @@
     bindings = <&mkp MB1 &mkp MB1>;
     display-name = "Double Click";
   };
+
+  sv_ae_lower: sv_ae_lower {
+      compatible = "zmk,behavior-macro";
+      #binding-cells = <0>;
+      bindings = <&macro_tap &kp LS(LC(U))>, <&macro_tap &kp N0 &kp N0 &kp E &kp N4>, <&macro_tap &kp SPACE>;
+  };
+  sv_ae_upper: sv_ae_upper {
+      compatible = "zmk,behavior-macro";
+      #binding-cells = <0>;
+      bindings = <&macro_tap &kp LS(LC(U))>, <&macro_tap &kp N0 &kp N0 &kp C &kp N4>, <&macro_tap &kp SPACE>;
+  };
+  sv_ao_lower: sv_ao_lower {
+      compatible = "zmk,behavior-macro";
+      #binding-cells = <0>;
+      bindings = <&macro_tap &kp LS(LC(U))>, <&macro_tap &kp N0 &kp N0 &kp E &kp N5>, <&macro_tap &kp SPACE>;
+  };
+  sv_ao_upper: sv_ao_upper {
+      compatible = "zmk,behavior-macro";
+      #binding-cells = <0>;
+      bindings = <&macro_tap &kp LS(LC(U))>, <&macro_tap &kp N0 &kp N0 &kp C &kp N5>, <&macro_tap &kp SPACE>;
+  };
+  sv_oe_lower: sv_oe_lower {
+      compatible = "zmk,behavior-macro";
+      #binding-cells = <0>;
+      bindings = <&macro_tap &kp LS(LC(U))>, <&macro_tap &kp N0 &kp N0 &kp F &kp N6>, <&macro_tap &kp SPACE>;
+  };
+  sv_oe_upper: sv_oe_upper {
+      compatible = "zmk,behavior-macro";
+      #binding-cells = <0>;
+      bindings = <&macro_tap &kp LS(LC(U))>, <&macro_tap &kp N0 &kp N0 &kp D &kp N6>, <&macro_tap &kp SPACE>;
+  };
