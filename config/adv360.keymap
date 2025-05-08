@@ -5,6 +5,68 @@
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/rgb.h>
 
+/* ZMK_UNICODE */
+
+#define HOST_OS 1 // Linux
+
+#if !defined OS_UNICODE_LEAD
+    #if HOST_OS == 2
+        #define OS_UNICODE_LEAD &macro_press &kp LALT      // macOS/Windows-Alt-Codes
+    #elif HOST_OS == 1
+        #define OS_UNICODE_LEAD &macro_tap &kp LS(LC(U))   // Linux
+    #else
+        #define OS_UNICODE_LEAD &macro_tap &kp RALT &kp U  // Windows + WinCompose (default)
+    #endif
+#endif
+#if !defined OS_UNICODE_TRAIL
+    #if HOST_OS == 2
+        #define OS_UNICODE_TRAIL &macro_release &kp LALT  // macOS/Windows-Alt-Codes
+    #elif HOST_OS == 1
+        #define OS_UNICODE_TRAIL &macro_tap &kp SPACE     // Linux
+    #else
+        #define OS_UNICODE_TRAIL &macro_tap &kp RET       // Windows + WinCompose (default)
+    #endif
+#endif
+
+#define UC_MACRO(name, unicode_bindings) \
+    / { \
+        macros { \
+            name: name { \
+                compatible = "zmk,behavior-macro"; \
+                wait-ms = <0>; \
+                tap-ms = <0>; \
+                #binding-cells = <0>; \
+                bindings = <OS_UNICODE_LEAD>, <&macro_tap unicode_bindings>, <OS_UNICODE_TRAIL>; \
+            }; \
+        }; \
+    };
+
+#define UC_MODMORPH(name, uc_binding, shifted_uc_binding) \
+    / { \
+        behaviors { \
+            name: name { \
+                compatible = "zmk,behavior-mod-morph"; \
+                #binding-cells = <0>; \
+                bindings = <uc_binding>, <shifted_uc_binding>; \
+                mods = <(MOD_LSFT|MOD_RSFT)>; \
+            }; \
+        }; \
+    };
+
+#define ZMK_UNICODE_SINGLE(name, L0, L1, L2, L3) \
+    UC_MACRO(name ## _lower, &kp L0 &kp L1 &kp L2 &kp L3) \
+    UC_MODMORPH(name, &name ## _lower, &none)
+
+#define ZMK_UNICODE_PAIR(name, L0, L1, L2, L3, U0, U1, U2, U3) \
+    UC_MACRO(name ## _lower, &kp L0 &kp L1 &kp L2 &kp L3) \
+    UC_MACRO(name ## _upper, &kp U0 &kp U1 &kp U2 &kp U3) \
+    UC_MODMORPH(name, &name ## _lower, &name ## _upper)
+
+/* Swedish letters */
+ZMK_UNICODE_PAIR(sv_ae,   N0, N0,  E, N4,   N0, N0,  C, N4) // ä/Ä
+ZMK_UNICODE_PAIR(sv_ao,   N0, N0,  E, N5,   N0, N0,  C, N5) // å/Å
+ZMK_UNICODE_PAIR(sv_oe,   N0, N0,  F, N6,   N0, N0,  D, N6) // ö/Ö
+
 / {
     behaviors {
         #include "macros.dtsi"
@@ -46,66 +108,6 @@
             tapping-term-ms = <200>;
             flavor = "tap-preferred";
         };
-
-        sv_ao_small: sv_ao_small {
-          compatible = "zmk,behavior-unicode";
-          label = "å";
-          #binding-cells = <0>;
-          unicode = <0x00E5>; // å
-        };
-        sv_ao: sv_ao {
-          compatible = "zmk,behavior-unicode";
-          label = "Å";
-          #binding-cells = <0>;
-          unicode = <0x00C5>; // Å
-        };
-        u_morph_ao: morph_ao {
-        compatible = "zmk,behavior-mod-morph";
-        label = "M_å";
-        #binding-cells = <0>;
-        bindings = <&sv_ao_small>, <&sv_ao>;
-        mods = <(MOD_LSFT|MOD_RSFT)>;
-        };
-
-        sv_ae_small: sv_ae_small {
-          compatible = "zmk,behavior-unicode";
-          label = "ä";
-          #binding-cells = <0>;
-          unicode = <0x00E4>; // ä
-        };
-        sv_ae: sv_ae {
-          compatible = "zmk,behavior-unicode";
-          label = "Ä";
-          #binding-cells = <0>;
-          unicode = <0x00C4>; // Ä
-        };
-        u_morph_ae: morph_ae {
-        compatible = "zmk,behavior-mod-morph";
-        label = "M_ä";
-        #binding-cells = <0>;
-        bindings = <&sv_ae_small>, <&sv_ae>;
-        mods = <(MOD_LSFT|MOD_RSFT)>;
-        };
-
-        sv_oe_small: sv_oe_small {
-          compatible = "zmk,behavior-unicode";
-          label = "ö";
-          #binding-cells = <0>;
-          unicode = <0x00F6>; // ö
-        };
-        sv_oe: sv_oe {
-          compatible = "zmk,behavior-unicode";
-          label = "Ö";
-          #binding-cells = <0>;
-          unicode = <0x00D6>; // Ö
-        };
-        u_morph_oe: morph_oe {
-        compatible = "zmk,behavior-mod-morph";
-        label = "M_ö";
-        #binding-cells = <0>;
-        bindings = <&sv_oe_small>, <&sv_oe>;
-        mods = <(MOD_LSFT|MOD_RSFT)>;
-        };
     };
 
     keymap {
@@ -114,9 +116,9 @@
         default_layer {
             display-name = "Base";
             bindings = <
-&kp EQUAL  &kp N1              &kp N2          &kp N3       &kp N4            &kp N5  &tog 1                                                                             &mo 3      &kp N6     &kp N7        &kp N8       &kp N9           &kp N0               &u_morph_ao
-&kp TAB    &kp B               &kp L           &kp D        &kp W             &kp Z   &none                                                                              &none      &kp MINUS  &kp F         &kp O        &kp U            &kp J                &u_morph_ae
-&kp ESC    &hm LEFT_COMMAND N  &hm LEFT_ALT R  &hm LCTRL T  &hm LEFT_SHIFT S  &kp G   &kp LEFT_COMMAND  &kp DELETE        &super_copy CARET 0      &kp LGUI   &kp RCTRL  &none      &kp Y      &hm RSHIFT H  &hm RCTRL A  &hm RIGHT_ALT E  &hm RIGHT_COMMAND I  &u_morph_oe
+&kp EQUAL  &kp N1              &kp N2          &kp N3       &kp N4            &kp N5  &tog 1                                                                             &mo 3      &kp N6     &kp N7        &kp N8       &kp N9           &kp N0               &sv_ao
+&kp TAB    &kp B               &kp L           &kp D        &kp W             &kp Z   &none                                                                              &none      &kp MINUS  &kp F         &kp O        &kp U            &kp J                &sv_ae
+&kp ESC    &hm LEFT_COMMAND N  &hm LEFT_ALT R  &hm LCTRL T  &hm LEFT_SHIFT S  &kp G   &kp LEFT_COMMAND  &kp DELETE        &super_copy CARET 0      &kp LGUI   &kp RCTRL  &none      &kp Y      &hm RSHIFT H  &hm RCTRL A  &hm RIGHT_ALT E  &hm RIGHT_COMMAND I  &sv_oe
 &kp LSHFT  &kp Q               &kp X           &kp M        &kp C             &kp V                                       &kp HOME                 &kp PG_UP                        &kp K      &kp P         &kp COMMA    &kp DOT          &kp FSLH             &kp RSHFT
 &mo 2      &kp GRAVE           &kp CAPS        &kp LEFT     &kp RIGHT                 &kp BSPC          &smart_layer 4 4  &kp END                  &kp PG_DN  &kp ENTER  &kp SPACE             &kp UP        &kp DOWN     &kp LBKT         &kp RBKT             &mo 2
             >;
