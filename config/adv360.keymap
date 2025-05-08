@@ -51,21 +51,33 @@
             compatible = "zmk,behavior-mod-morph";
             #binding-cells = <0>;
             bindings = <&sv_ae_lower>, <&sv_ae_upper>;
+
             mods = <(MOD_LSFT|MOD_RSFT)>;
         };
-    
+
         sv_ao: sv_ao {
             compatible = "zmk,behavior-mod-morph";
             #binding-cells = <0>;
             bindings = <&sv_ao_lower>, <&sv_ao_upper>;
+
             mods = <(MOD_LSFT|MOD_RSFT)>;
         };
-    
+
         sv_oe: sv_oe {
             compatible = "zmk,behavior-mod-morph";
             #binding-cells = <0>;
             bindings = <&sv_oe_lower>, <&sv_oe_upper>;
+
             mods = <(MOD_LSFT|MOD_RSFT)>;
+        };
+    };
+
+    macros {
+        vim_top: vim_top {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp G &kp G>;
+            label = "VIM_TOP";
         };
     };
 
@@ -130,11 +142,11 @@
         vim {
             display-name = "vim";
             bindings = <
-&trans  &trans  &trans  &trans  &trans  &trans  &tog 1                                      &mo 3   &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans  &none                                       &none   &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans  &none   &trans  &trans      &trans  &trans  &none   &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans                  &trans      &trans                  &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans          &trans  &trans  &trans      &trans  &trans  &trans          &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans  &tog 1                                      &mo 3   &trans  &trans     &trans           &trans          &trans      &trans
+&trans  &trans  &kp I   &trans  &trans  &trans  &none                                       &none   &trans  &kp CARET  &kp LS(G)        &vim_top        &kp DOLLAR  &trans
+&trans  &trans  &trans  &trans  &trans  &trans  &none   &trans  &trans      &trans  &trans  &none   &trans  &kp H      &kp J            &kp K           &kp L       &trans
+&trans  &trans  &trans  &trans  &trans  &trans                  &trans      &trans                  &kp A   &trans     &kp RIGHT_BRACE  &kp LEFT_BRACE  &kp E       &trans
+&trans  &trans  &trans  &trans  &trans          &trans  &trans  &trans      &trans  &trans  &trans          &trans     &trans           &trans          &trans      &trans
             >;
         };
 
