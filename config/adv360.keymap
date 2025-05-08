@@ -53,12 +53,18 @@
           #binding-cells = <0>;
           unicode = <0x00E5>; // å
         };
-
         sv_ao: sv_ao {
           compatible = "zmk,behavior-unicode";
           label = "Å";
           #binding-cells = <0>;
           unicode = <0x00C5>; // Å
+        };
+        u_morph_ao: morph_ao {
+        compatible = "zmk,behavior-mod-morph";
+        label = "M_å";
+        #binding-cells = <0>;
+        bindings = <&sv_ao_small>, <&sv_ao>;
+        mods = <(MOD_LSFT|MOD_RSFT)>;
         };
 
         sv_ae_small: sv_ae_small {
@@ -67,12 +73,18 @@
           #binding-cells = <0>;
           unicode = <0x00E4>; // ä
         };
-
         sv_ae: sv_ae {
           compatible = "zmk,behavior-unicode";
           label = "Ä";
           #binding-cells = <0>;
           unicode = <0x00C4>; // Ä
+        };
+        u_morph_ae: morph_ae {
+        compatible = "zmk,behavior-mod-morph";
+        label = "M_ä";
+        #binding-cells = <0>;
+        bindings = <&sv_ae_small>, <&sv_ae>;
+        mods = <(MOD_LSFT|MOD_RSFT)>;
         };
 
         sv_oe_small: sv_oe_small {
@@ -81,35 +93,19 @@
           #binding-cells = <0>;
           unicode = <0x00F6>; // ö
         };
-
         sv_oe: sv_oe {
           compatible = "zmk,behavior-unicode";
           label = "Ö";
           #binding-cells = <0>;
           unicode = <0x00D6>; // Ö
         };
-    };
-
-    u_morph_ao: morph_ao {
-    compatible = "zmk,behavior-mod-morph";
-    label = "M_å";
-    #binding-cells = <0>;
-    bindings = <&sv_ao_small>, <&sv_ao>;
-    mods = <(MOD_LSFT|MOD_RSFT)>;
-    };
-    u_morph_ae: morph_ae {
-    compatible = "zmk,behavior-mod-morph";
-    label = "M_ä";
-    #binding-cells = <0>;
-    bindings = <&sv_ae_small>, <&sv_ae>;
-    mods = <(MOD_LSFT|MOD_RSFT)>;
-    };
-    u_morph_oe: morph_oe {
-    compatible = "zmk,behavior-mod-morph";
-    label = "M_ö";
-    #binding-cells = <0>;
-    bindings = <&sv_oe_small>, <&sv_oe>;
-    mods = <(MOD_LSFT|MOD_RSFT)>;
+        u_morph_oe: morph_oe {
+        compatible = "zmk,behavior-mod-morph";
+        label = "M_ö";
+        #binding-cells = <0>;
+        bindings = <&sv_oe_small>, <&sv_oe>;
+        mods = <(MOD_LSFT|MOD_RSFT)>;
+        };
     };
 
     keymap {
