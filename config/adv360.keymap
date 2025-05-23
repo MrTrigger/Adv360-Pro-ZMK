@@ -87,11 +87,11 @@
         default_layer {
             display-name = "Base";
             bindings = <
-&kp EQUAL  &kp N1              &kp N2          &kp N3       &kp N4            &kp N5  &tog 1                                                                                    &mo 3      &kp N6     &kp N7        &kp N8       &kp N9           &kp N0               &sv_ao
-&kp TAB    &kp B               &kp L           &kp D        &kp W             &kp Z   &none                                                                                     &none      &kp MINUS  &kp F         &kp O        &kp U            &kp J                &sv_ae
-&kp ESC    &hm LEFT_COMMAND N  &hm LEFT_ALT R  &hm LCTRL T  &hm LEFT_SHIFT S  &kp G   &kp LEFT_COMMAND  &kp DELETE        &super_copy LC(V) 0      &kp LGUI   &kp LEFT_COMMAND  &none      &kp Y      &hm RSHIFT H  &hm RCTRL A  &hm RIGHT_ALT E  &hm RIGHT_COMMAND I  &sv_oe
-&kp LSHFT  &kp Q               &kp X           &kp M        &kp C             &kp V                                       &kp HOME                 &kp PG_UP                               &kp K      &kp P         &kp COMMA    &kp DOT          &kp FSLH             &kp DOUBLE_QUOTES
-&mo 2      &kp GRAVE           &kp CAPS        &kp LEFT     &kp RIGHT                 &kp BSPC          &smart_layer 4 4  &smart_layer 5 5         &kp PG_DN  &kp ENTER         &kp SPACE             &kp UP        &kp DOWN     &kp LBKT         &kp RBKT             &mo 2
+&kp EQUAL  &kp N1              &kp N2          &kp N3       &kp N4            &kp N5  &tog 1                                                                                 &mo 3      &kp N6     &kp N7        &kp N8       &kp N9           &kp N0               &sv_ao
+&kp TAB    &kp B               &kp L           &kp D        &kp W             &kp Z   &none                                                                                  &none      &kp MINUS  &kp F         &kp O        &kp U            &kp J                &sv_ae
+&kp ESC    &hm LEFT_COMMAND N  &hm LEFT_ALT R  &hm LCTRL T  &hm LEFT_SHIFT S  &kp G   &kp LEFT_COMMAND  &kp DELETE     &super_copy LC(V) 0      &kp LGUI   &kp LEFT_COMMAND  &none      &kp Y      &hm RSHIFT H  &hm RCTRL A  &hm RIGHT_ALT E  &hm RIGHT_COMMAND I  &sv_oe
+&kp LSHFT  &kp Q               &kp X           &kp M        &kp C             &kp V                                    &kp HOME                 &kp PG_UP                               &kp K      &kp P         &kp COMMA    &kp DOT          &kp FSLH             &kp DOUBLE_QUOTES
+&mo 2      &kp GRAVE           &kp CAPS        &kp LEFT     &kp RIGHT                 &kp RETURN        &kp BACKSPACE  &smart_layer 5 5         &kp PG_DN  &smart_layer 4 4  &kp SPACE             &kp UP        &kp DOWN     &kp LBKT         &kp RBKT             &mo 2
             >;
         };
 
