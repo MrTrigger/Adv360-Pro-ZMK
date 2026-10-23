@@ -38,12 +38,17 @@ jobs:
 
   build:
     needs: changes
-    if: needs.changes.outputs.firmware == 'true'
+    if: ${{ !cancelled() && !(needs.changes.result == 'success' && needs.changes.outputs.firmware == 'false') }}
     runs-on: ubuntu-latest
     container:
       image: zmkfirmware/zmk-build-arm:stable
     name: Build (Legacy)
     steps:
+      - name: Require successful validation plan
+        env:
+          PLAN_RESULT: ${{ needs.changes.result }}
+          RUN_SUITE: ${{ needs.changes.outputs.firmware }}
+        run: test "$PLAN_RESULT" = success && test "$RUN_SUITE" = true
       - name: Checkout
         uses: actions/checkout@v4
       - name: Get version data
@@ -96,12 +101,17 @@ jobs:
             ${{ steps.get_info.outputs.file_prefix }}-right.uf2
   build-clique:
     needs: changes
-    if: needs.changes.outputs.firmware == 'true'
+    if: ${{ !cancelled() && !(needs.changes.result == 'success' && needs.changes.outputs.firmware == 'false') }}
     runs-on: ubuntu-latest
     container:
       image: zmkfirmware/zmk-build-arm:stable
     name: Build (Clique)
     steps:
+      - name: Require successful validation plan
+        env:
+          PLAN_RESULT: ${{ needs.changes.result }}
+          RUN_SUITE: ${{ needs.changes.outputs.firmware }}
+        run: test "$PLAN_RESULT" = success && test "$RUN_SUITE" = true
       - name: Checkout
         uses: actions/checkout@v4
       - name: Get version data
