@@ -1,4 +1,4 @@
-# Generated from the pinned offline Ninja reference.
+# Generated from the actual pinned firmware capture.
 GRAPH = {
     "schema": 1,
     "plan": [
@@ -25897,7 +25897,10 @@ GRAPH = {
             "outputs": [
                 "@BUILD@/zephyr/include/generated/app_version.h",
             ],
-            "inputs": [],
+            "inputs": [
+                "@APP@/VERSION",
+                "@SRC_ZEPHYR@/cmake/gen_version_h.cmake",
+            ],
         },
         {
             "id": "edge_c307d981c348",
@@ -25945,6 +25948,7 @@ GRAPH = {
                 "@BUILD@/zephyr/include/generated/syscall_list.h",
                 "@BUILD@/zephyr/misc/generated/struct_tags.json",
                 "@BUILD@/zephyr/misc/generated/syscalls.json",
+                "@SRC_ZEPHYR@/scripts/build/gen_offset_header.py",
             ],
         },
         {
@@ -26033,6 +26037,7 @@ GRAPH = {
             "inputs": [
                 "@BUILD@/zephyr/misc/generated/struct_tags.json",
                 "@BUILD@/zephyr/misc/generated/syscalls.json",
+                "@SRC_ZEPHYR@/scripts/build/gen_syscalls.py",
             ],
         },
         {
@@ -26042,7 +26047,10 @@ GRAPH = {
             "outputs": [
                 "@BUILD@/zephyr/include/generated/version.h",
             ],
-            "inputs": [],
+            "inputs": [
+                "@SRC_ZEPHYR@/VERSION",
+                "@SRC_ZEPHYR@/cmake/gen_version_h.cmake",
+            ],
         },
         {
             "id": "edge_c95914598487",
@@ -26104,6 +26112,7 @@ GRAPH = {
                 "@BUILD@/zephyr/subsys/net/libsubsys__net.a",
                 "@BUILD@/zephyr/subsys/random/libsubsys__random.a",
                 "@BUILD@/zephyr/zephyr_pre0.elf",
+                "@SRC_ZEPHYR@/scripts/build/gen_isr_tables.py",
             ],
         },
         {
@@ -32538,6 +32547,7 @@ GRAPH = {
             ],
             "inputs": [
                 "@BUILD@/zephyr/misc/generated/syscalls_file_list.txt",
+                "@SRC_ZEPHYR@/scripts/build/parse_syscalls.py",
             ],
         },
         {
@@ -47405,6 +47415,8 @@ GRAPH = {
                 "@BUILD@/zephyr/subsys/net/libsubsys__net.a",
                 "@BUILD@/zephyr/subsys/random/libsubsys__random.a",
                 "@BUILD@/zephyr/zephyr_pre0.elf",
+                "@SRC_ZEPHYR@/scripts/build/check_init_priorities.py",
+                "@SRC_ZEPHYR@/scripts/build/uf2conv.py",
             ],
         },
     ],

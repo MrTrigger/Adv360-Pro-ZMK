@@ -6,11 +6,59 @@ import pickle
 import tempfile
 import unittest
 
+from capture_graph import extract
 from native_action import relocate_pickle, replace_bytes, run
 from ninja_graph import Ninja
 
 
 class NativeToolsTest(unittest.TestCase):
+    def test_source_file_named_only_in_a_generator_command_is_declared(self):
+        with tempfile.TemporaryDirectory() as name:
+            build = Path(name)
+            (build / 'build.ninja').write_text('rule version\n  command = cat /inputs/zmk/app/VERSION > /capture/build/version.h\nbuild version.h: version\n')
+            layout = dict(build='/capture/build', app='/inputs/zmk/app', config='/workspace/config', sdk='/sdk',
+                          paths={'zmk': '/inputs/zmk'}, tools={}, firmware=['version.h'])
+            graph = extract(build, layout, {}, {'files': [], 'source_files': ['@APP@/VERSION']}, '')
+            self.assertEqual(graph['edges'][0]['inputs'], ['@APP@/VERSION'])
+
+    def test_copied_generator_directory_declares_its_plugin_and_imports(self):
+        with tempfile.TemporaryDirectory() as name:
+            build = Path(name)
+            (build / 'build.ninja').write_text(
+                'rule copy\n  command = /tools/cmake -E copy_directory /inputs/nanopb/generator/ /capture/build/generator\n'
+                'build generator/main.py: copy\n'
+                'rule use\n  command = /capture/build/generator/plugin > /capture/build/zmk.uf2\n'
+                'build zmk.uf2: use generator/main.py\n')
+            layout = dict(build='/capture/build', app='/inputs/zmk/app', config='/workspace/config', sdk='/sdk',
+                          paths={'zmk': '/inputs/zmk', 'nanopb': '/inputs/nanopb'},
+                          tools={'cmake': '/tools/cmake'}, firmware=['zmk.uf2'])
+            source_files = ['@SRC_NANOPB@/generator/main.py', '@SRC_NANOPB@/generator/plugin', '@SRC_NANOPB@/generator/helper.py']
+            graph = extract(build, layout, {}, {'files': [], 'source_files': source_files}, '')
+            copied, consumer = graph['edges']
+            self.assertEqual(copied['outputs'], ['@BUILD@/generator/helper.py', '@BUILD@/generator/main.py', '@BUILD@/generator/plugin'])
+            self.assertEqual(copied['inputs'], sorted(source_files))
+            self.assertEqual(consumer['inputs'], copied['outputs'])
+
+    def test_generated_tools_keep_executable_permissions_between_actions(self):
+        with tempfile.TemporaryDirectory() as name:
+            root = Path(name)
+            (root / 'tool.sh').write_text('#!/bin/sh\nprintf "firmware answer\\n"\n')
+            (root / 'tool.sh').chmod(0o755)
+            spec = dict(mode='edge', roots={'@SDK@': 'sdk'}, tools={'@PYTHON@': '/unused/python', '@PROTOC@': '/unused/protoc'},
+                        project_paths={'@SRC_ZMK@': 'zmk'}, project_names={'zmk': '@SRC_ZMK@'},
+                        command='cp @APP@/tool.sh @BUILD@/tool.sh',
+                        inputs=[['tool.sh', '@APP@/tool.sh']], outputs=[['generated.sh', '@BUILD@/tool.sh']])
+            previous = Path.cwd()
+            try:
+                os.chdir(root)
+                run(spec)
+                spec.update(command='@BUILD@/tool.sh > @BUILD@/answer', inputs=[['generated.sh', '@BUILD@/tool.sh']],
+                            outputs=[['answer', '@BUILD@/answer']])
+                run(spec)
+            finally:
+                os.chdir(previous)
+            self.assertEqual((root / 'answer').read_bytes(), b'firmware answer\n')
+
     def test_order_only_without_explicit_inputs(self):
         with tempfile.TemporaryDirectory() as name:
             path = Path(name) / 'build.ninja'

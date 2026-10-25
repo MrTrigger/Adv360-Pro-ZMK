@@ -84,6 +84,20 @@ def extract(build, layout, configurations, inventory, deps, plan_only=False):
     if plan_only:
         return plan
 
+    # Ninja can name only a subset of files copied as a directory. Preserve
+    # that entire tool boundary, including plugins and their Python imports.
+    source_files = {posixpath.normpath(value) for value in inventory.get('source_files', [])}
+    copies = {}
+    for index in selected:
+        match = re.search(r'@CMAKE@ -E copy_directory (\S+) (\S+)', rewrite(raw[index]['command']))
+        if match:
+            source, destination = (posixpath.normpath(value) for value in match.groups())
+            members = {destination + value[len(source):]: value for value in source_files if value.startswith(source + '/')}
+            assert members, ('directory copy requires source_files inventory', source)
+            copies[index] = (destination, members)
+    all_outputs = {path(output) for index in selected for output in raw[index]['outputs']}
+    all_outputs.update(output for _, members in copies.values() for output in members)
+
     discovered = parse_deps(deps)
     for filename, text in inventory.get('depfiles', {}).items():
         tokens = shlex.split(text.replace('\\\n', ' ').partition(':')[2])
@@ -100,6 +114,8 @@ def extract(build, layout, configurations, inventory, deps, plan_only=False):
         assert not edge['generator'], ('unexpected generator', edge['outputs'])
         outputs = {path(output) for output in edge['outputs']}
         command = rewrite(edge['command'])
+        if index in copies:
+            outputs.update(copies[index][1])
         # gen_syscalls has additional outputs absent from Ninja's output list.
         if 'gen_syscalls.py' in command:
             outputs.update('@BUILD@/' + filename for filename in inventory['files']
@@ -112,6 +128,15 @@ def extract(build, layout, configurations, inventory, deps, plan_only=False):
         for output in edge['outputs']:
             inputs.update(path(source) for source in discovered.get(output, []))
             inputs.update(path(source) for source in discovered.get(path(output), []))
+        if index in copies:
+            inputs.update(copies[index][1].values())
+        for logical in re.findall(r'@(?:BUILD|APP|CONFIG|SRC_[A-Z0-9_]+)@/[^\s";]+', command):
+            logical = posixpath.normpath(logical)
+            if logical in source_files:
+                inputs.add(logical)
+        for producer, (directory, _) in copies.items():
+            if producer != index and directory + '/' in command:
+                inputs.update(output for output in all_outputs if output.startswith(directory + '/'))
         inputs -= outputs
         if 'check_init_priorities.py' in command:
             # The checker derives this pathname from the ELF directory rather
@@ -148,9 +173,12 @@ def main():
     parser.add_argument('--bzl', type=Path)
     args = parser.parse_args()
     root = args.capture
+    inventory = json.loads((root / 'INVENTORY.json').read_text())
+    if (root / 'SOURCE-FILES.json').is_file():
+        inventory['source_files'] = json.loads((root / 'SOURCE-FILES.json').read_text())
     graph = extract(root / 'build', json.loads((root / 'LAYOUT.json').read_text()),
                     json.loads((root / 'CONFIGURE-FILES.json').read_text()),
-                    json.loads((root / 'INVENTORY.json').read_text()), (root / 'deps.txt').read_text())
+                    inventory, (root / 'deps.txt').read_text())
     args.output.write_text(json.dumps(graph, indent=2) + '\n')
     if args.bzl:
         args.bzl.write_text('# Generated from the actual pinned firmware capture.\nGRAPH = ' + json.dumps(graph, indent=2) + '\n')

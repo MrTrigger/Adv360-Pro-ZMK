@@ -87,6 +87,7 @@ def run(spec):
             original = execroot / filename
             if token == '@BUILD@':
                 target.write_bytes(relocate(original.read_bytes(), roots, logical))
+                target.chmod(original.stat().st_mode & 0o777)
             elif spec['mode'] == 'configure':
                 shutil.copyfile(original, target)
             else:
@@ -143,6 +144,7 @@ def run(spec):
             target = execroot / filename
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(relocate(original.read_bytes(), normalizations, logical))
+            target.chmod(original.stat().st_mode & 0o777)
 
 
 if __name__ == '__main__':

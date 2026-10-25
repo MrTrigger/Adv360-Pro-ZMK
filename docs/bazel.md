@@ -6,7 +6,7 @@ Each graph has a configure action, generated files, individual compiler actions,
 
 ## Change firmware configuration
 
-Edit `config/`, then run the native caller. If the configured Ninja plan changes, recapture the affected variants and regenerate `firmware/*.bzl` with `scripts/bazel/zephyr/tools/capture_graph.py`. A graph change requires a real build and artifact checks. A source-only change that preserves the plan uses its existing graph.
+Edit `config/`, then run the native caller. If the configured Ninja plan changes, recapture the affected variants and regenerate `firmware/*.bzl` with `scripts/bazel/zephyr/tools/capture_graph.py`. Retain `SOURCE-FILES.json` in each reference capture, listing its normalized source paths. The extractor uses it to declare every file copied with a generator directory and the files its plugin imports. Generated executables retain their permissions across actions. A graph change requires a real build and artifact checks. A source-only change that preserves the plan uses its existing graph.
 
 ## Update pinned dependencies
 
