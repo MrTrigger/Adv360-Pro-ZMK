@@ -2,8 +2,15 @@ load("@rules_python//python:defs.bzl", "py_binary", "py_test")
 
 package(default_visibility = ["//visibility:public"])
 
-alias(name = "dtc", actual = "@dtc//:dtc")
-alias(name = "gperf", actual = "@gperf//:gperf")
+alias(
+    name = "dtc",
+    actual = "@dtc//:dtc",
+)
+
+alias(
+    name = "gperf",
+    actual = "@gperf//:gperf",
+)
 
 # Every wheel in the hashed lock, plus the natively packaged sdist-only docopt.
 py_binary(
@@ -45,5 +52,34 @@ py_binary(
     ],
 )
 
-py_test(name = "python_launcher_test", srcs = ["tools/pyrun_test.py"], main = "tools/pyrun_test.py", data = ["tools/pyrun.py"], size = "small")
+py_test(
+    name = "python_launcher_test",
+    size = "small",
+    srcs = ["tools/pyrun_test.py"],
+    data = ["tools/pyrun.py"],
+    main = "tools/pyrun_test.py",
+)
 
+py_binary(
+    name = "native_runner",
+    srcs = [
+        "tools/capture_graph.py",
+        "tools/native_action.py",
+        "tools/ninja_graph.py",
+    ],
+    imports = ["tools"],
+    main = "tools/native_action.py",
+)
+
+py_test(
+    name = "native_tools_test",
+    size = "small",
+    srcs = [
+        "tools/capture_graph.py",
+        "tools/native_action.py",
+        "tools/native_tools_test.py",
+        "tools/ninja_graph.py",
+    ],
+    imports = ["tools"],
+    main = "tools/native_tools_test.py",
+)

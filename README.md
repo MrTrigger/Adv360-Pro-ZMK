@@ -18,56 +18,26 @@ Certain ZMK features (e.g. combos) require knowing the exact key positions in th
 
 ### Build firmware
 
-1. Push a commit to trigger the build.
-2. Download the artifact.
+Finish a meaningful batch of changes, then push it or run the Build workflow manually. Download `firmware-no-clique` or `firmware-clique` from that run. Pull requests use the existing path selector; docs-only changes skip firmware. Main, release, manual and weekly runs build both flavors.
 
-## Building the Firmware in a local container
+## Building firmware locally
 
-### Setup
-
-#### Software
-
-* Either Podman or Docker is required, Podman is chosen if both are installed.
-* Make is also required
-
-#### Windows specific
-
-* If compiling on Windows use WSL2 and Docker [Docker Setup Guide](https://docs.docker.com/desktop/windows/wsl/).
-* Install make using `sudo apt-get install make` inside the WSL2 instance.
-* The repository can be cloned directly into the WSL2 instance or accessed through the C: mount point WSL provides by default (`/mnt/c/path-to-repo`).
-
-#### macOS specific
-
-On macOS [brew](https://brew.sh) can be used to install the required components.
-
-* docker
-* [colima](https://github.com/abiosoft/colima) can be used as the docker engine
+Install Git, Python 3 and Docker. The wrapper uses a digest-pinned Linux amd64 builder, Bazel 8.4.2, a pinned Python interpreter, SDK 0.16.8 and the frozen Zephyr 3.5/ZMK West sources. Build actions run without network access. Archive downloads happen before actions and are verified by their hashes.
 
 ```shell
-brew install docker colima
-colima start
-```
-> Note: On Apple Silicon (ARM based) systems you need to make sure to start colima with the correct architecture for the container being used.
-> ```
-> colima start --arch x86_64
-> ```
-
-#### Ubuntu/Debian specific
-
-```shell
-sudo apt-get install docker make
+scripts/build-firmware
+scripts/build-firmware --flavor studio --side left
 ```
 
-### Building the firmware
+The first command builds left and right firmware in both legacy and Studio flavors. `make` builds both Studio halves, `make left` builds only the Studio left half, and `make legacy` builds both legacy halves. Make is optional.
 
-1. Execute `make` to build firmware for both halves or `make left` to only build firmware for the left hand side.
-2. Check the `firmware` directory for the latest firmware build. The first part of the filename is the timestamp when the firmware was built.
+The caller copies ELF, HEX and UF2 files into `build/native/<side>_<flavor>/`. Timestamped UF2 files retain their existing names under `firmware/`. The date, first four branch characters and commit are explicit cached inputs. The caller generates the version macro in Bazel's output tree and leaves `config/version.dtsi` unchanged. Use `--date`, `--branch`, `--commit` and `--timestamp` for reproducible metadata.
 
-### Cleanup
+State defaults to `.local/bazel`. `ADV_BAZEL_STATE` selects another directory. `ADV_BAZEL_CACHE=read|write|off` controls the personal cache at `bazel-cache.wallintech.eu`. Reader and writer credentials are read from `~/.config/personal-bazel-cache/bazel-cache-{reader,writer}.credential`; CI uses its reader secret. Without a credential, the wrapper reports that it is building without the remote cache.
 
-The built docker container and compiled firmware files can be deleted with `make clean`. This might be necessary if you updated your fork from V2.0 to V3.0 and are encountering build failures.
+`make clean_firmware` removes timestamped UF2 files. It keeps Bazel's cached results and downloaded archives. See [the native build guide](docs/bazel.md) for graph updates and validation.
 
-Creating the docker container takes some time. Therefore `make clean_firmware` can be used to only clean firmware without removing the docker container. Similarly `make clean_image` can be used to remove the docker container without removing compiled firmware files.
+These firmware build commands target Linux amd64. Windows, WSL and Apple execution remain unqualified.
 
 ## Flashing firmware
 
@@ -134,7 +104,7 @@ The changelog for both the config repo and the underlying ZMK fork that the conf
 
 ## Beta testing
 
-The Advantage 360 Pro is always getting updates and refinements. If you are willing to beta test you can follow [this guide from ZMK](https://zmk.dev/docs/features/beta-testing#testing-features) on how to change where your config repo points to. The `west.yml` file that is mentioned is located in config/. [This link](config/west.yml) can take you to the file. Typically you will only need to change the `revision: ` to match the beta branch. There is currently no beta branch available for testing.
+The Advantage 360 Pro is always getting updates and refinements. If you are willing to beta test you can follow [this guide from ZMK](https://zmk.dev/docs/features/beta-testing#testing-features) on how to change where your config repo points to. The `west.yml` file that is mentioned is located in config/. [This link](config/west.yml) can take you to the file. Changing `config/west.yml` also requires refreshing the frozen archives and native graphs described in [the native build guide](docs/bazel.md). There is currently no beta branch available for testing.
 
 Feedback on beta branches should be submitted as a GitHub issue on the base ZMK repository as opposed to this config repository.
 

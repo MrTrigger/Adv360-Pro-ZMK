@@ -1,1 +1,14 @@
-exports_files(["west-sources.json", "remove-nanopb-builds.patch"])
+load("@rules_python//python:defs.bzl", "py_binary")
+
+exports_files([
+    "west-sources.json",
+    "remove-nanopb-builds.patch",
+    "nanopb-importlib-resources.patch",
+])
+
+py_binary(
+    name = "version",
+    srcs = ["version.py"],
+    main = "version.py",
+    visibility = ["//visibility:public"],
+)

@@ -6,12 +6,16 @@ bazel_dep(name = "rules_shell", version = "0.3.0")
 # Pinned inputs for native Zephyr firmware actions.
 bazel_dep(name = "rules_python", version = "1.9.1")
 bazel_dep(name = "platforms", version = "1.0.0")
+
 # Host tools built natively from source (no distro packages, no SDK relocation).
 bazel_dep(name = "dtc", version = "1.7.2.bcr.2")
 bazel_dep(name = "gperf", version = "3.1.bcr.2")
 
 python = use_extension("@rules_python//python/extensions:python.bzl", "python")
-python.toolchain(python_version = "3.12.13", is_default = True)
+python.toolchain(
+    is_default = True,
+    python_version = "3.12.13",
+)
 
 # Zephyr's own build scripts run under this interpreter and these hashed wheels,
 # not the builder image's pip.
@@ -24,63 +28,61 @@ pip.parse(
 use_repo(pip, "zephyr_pip")
 
 http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
 zephyr_sdk = use_repo_rule("//scripts/bazel/zephyr:zephyr_sdk.bzl", "zephyr_sdk")
 
 # SDK minimal archive + arm-zephyr-eabi toolchain merged into one root, both sha256-verified.
 zephyr_sdk(
     name = "zephyr_sdk",
-    version = "0.16.8",
-    minimal_url = "https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.16.8/zephyr-sdk-0.16.8_linux-x86_64_minimal.tar.xz",
     minimal_sha256 = "c323afcd22149ef0f217759a478bf8b3a42d2e36c89b653a0b875db88d7677e4",
-    toolchain_url = "https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.16.8/toolchain_linux-x86_64_arm-zephyr-eabi.tar.xz",
+    minimal_url = "https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.16.8/zephyr-sdk-0.16.8_linux-x86_64_minimal.tar.xz",
     toolchain_sha256 = "2f77a13e419e9b3bf113cb54eab6060869719477a459453434ec2f4ad536611d",
+    toolchain_url = "https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.16.8/toolchain_linux-x86_64_arm-zephyr-eabi.tar.xz",
+    version = "0.16.8",
 )
 
 # Ninja v1.13.2
 http_archive(
     name = "ninja_linux_x86_64",
-    urls = ["https://github.com/ninja-build/ninja/releases/download/v1.13.2/ninja-linux.zip"],
-    sha256 = "5749cbc4e668273514150a80e387a957f933c6ed3f5f11e03fb30955e2bbead6",
     build_file = "//scripts/bazel/zephyr/third_party:ninja.BUILD",
+    sha256 = "5749cbc4e668273514150a80e387a957f933c6ed3f5f11e03fb30955e2bbead6",
+    urls = ["https://github.com/ninja-build/ninja/releases/download/v1.13.2/ninja-linux.zip"],
 )
 
 # CMake 4.4.4, shared with the ARC image. Firmware qualification is separate.
 http_archive(
     name = "cmake_linux_x86_64",
-    urls = ["https://github.com/Kitware/CMake/releases/download/v4.4.4/cmake-4.4.4-linux-x86_64.tar.gz"],
+    build_file = "//scripts/bazel/zephyr/third_party:cmake.BUILD",
     sha256 = "e5bb807f7728cb60cd8b27ebc97a2edb469b68655f21e844a600c3575b76f5bb",
     strip_prefix = "cmake-4.4.4-linux-x86_64",
-    build_file = "//scripts/bazel/zephyr/third_party:cmake.BUILD",
+    urls = ["https://github.com/Kitware/CMake/releases/download/v4.4.4/cmake-4.4.4-linux-x86_64.tar.gz"],
 )
 
 # sdist-only dependency of pykwalify, pure Python, packaged natively instead of building a wheel
 http_archive(
     name = "docopt_sdist",
-    urls = ["https://files.pythonhosted.org/packages/a2/55/8f8cab2afd404cf578136ef2cc5dfb50baa1761b68c9da1fb1e4eed343c9/docopt-0.6.2.tar.gz"],
+    build_file = "//scripts/bazel/zephyr/third_party:docopt.BUILD",
     sha256 = "49b3a825280bd66b3aa83585ef59c4a8c82f2c8a522dbe754a8bc8d08c85c491",
     strip_prefix = "docopt-0.6.2",
-    build_file = "//scripts/bazel/zephyr/third_party:docopt.BUILD",
+    urls = ["https://files.pythonhosted.org/packages/a2/55/8f8cab2afd404cf578136ef2cc5dfb50baa1761b68c9da1fb1e4eed343c9/docopt-0.6.2.tar.gz"],
 )
 
 west = use_extension("//scripts/bazel:west.bzl", "west")
-use_repo(west,
-    "west_zmk",
-    "west_zephyr",
-    "west_nanopb",
-    "west_zmk_studio_messages",
+use_repo(
+    west,
     "west_acpica",
-    "west_bsim",
     "west_babblesim_base",
-    "west_babblesim_ext_2g4_libphycomv1",
-    "west_babblesim_ext_2g4_phy_v1",
-    "west_babblesim_ext_2g4_channel_ntncable",
     "west_babblesim_ext_2g4_channel_multiatt",
-    "west_babblesim_ext_2g4_modem_magic",
-    "west_babblesim_ext_2g4_modem_ble_simple",
+    "west_babblesim_ext_2g4_channel_ntncable",
     "west_babblesim_ext_2g4_device_burst_interferer",
-    "west_babblesim_ext_2g4_device_wlan_actmod",
     "west_babblesim_ext_2g4_device_playback",
+    "west_babblesim_ext_2g4_device_wlan_actmod",
+    "west_babblesim_ext_2g4_libphycomv1",
+    "west_babblesim_ext_2g4_modem_ble_simple",
+    "west_babblesim_ext_2g4_modem_magic",
+    "west_babblesim_ext_2g4_phy_v1",
     "west_babblesim_ext_libcryptov1",
+    "west_bsim",
     "west_canopennode",
     "west_cmsis",
     "west_cmsis_dsp",
@@ -100,12 +102,14 @@ use_repo(west,
     "west_hal_stm32",
     "west_hal_telink",
     "west_hal_wurthelektronik",
-    "west_libmetal",
     "west_liblc3",
+    "west_libmetal",
     "west_littlefs",
     "west_lvgl",
     "west_mbedtls",
+    "west_metadata",
     "west_mipi_sys_t",
+    "west_nanopb",
     "west_nrf_hw_models",
     "west_open_amp",
     "west_percepio",
@@ -115,11 +119,14 @@ use_repo(west,
     "west_trusted_firmware_a",
     "west_uoscore_uedhoc",
     "west_zcbor",
+    "west_zephyr",
+    "west_zmk",
+    "west_zmk_studio_messages",
 )
 
 http_archive(
     name = "protoc_linux_x86_64",
-    urls = ["https://github.com/protocolbuffers/protobuf/releases/download/v33.0/protoc-33.0-linux-x86_64.zip"],
-    sha256 = "d99c011b799e9e412064244f0be417e5d76c9b6ace13a2ac735330fa7d57ad8f",
     build_file = "//scripts/bazel/zephyr/third_party:protoc.BUILD",
+    sha256 = "d99c011b799e9e412064244f0be417e5d76c9b6ace13a2ac735330fa7d57ad8f",
+    urls = ["https://github.com/protocolbuffers/protobuf/releases/download/v33.0/protoc-33.0-linux-x86_64.zip"],
 )

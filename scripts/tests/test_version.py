@@ -24,7 +24,7 @@ class VersionTests(unittest.TestCase):
                 (tools / "date").write_text("#!/bin/sh\necho 20261025\n")
                 (tools / "date").chmod(0o755)
                 environment = dict(os.environ, PATH=str(tools) + os.pathsep + os.environ["PATH"])
-                subprocess.run(["bash", str(ROOT / "bin/get_version.sh"), "V3.0", "abc1234", flavor],
+                subprocess.run(["bash", str(ROOT / "scripts/tests/fixtures/legacy-version.sh"), "V3.0", "abc1234", flavor],
                                cwd=root, env=environment, check=True, stdout=subprocess.DEVNULL)
                 self.assertEqual(version.render("20261025", "V3.0", "abc1234", flavor),
                                  (root / "config/version.dtsi").read_text())

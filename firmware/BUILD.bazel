@@ -1,0 +1,34 @@
+load("//scripts/bazel/zephyr:native.bzl", "firmware")
+load(":left-legacy.bzl", LEFT_LEGACY = "GRAPH")
+load(":left-studio.bzl", LEFT_STUDIO = "GRAPH")
+load(":right.bzl", RIGHT = "GRAPH")
+
+package(default_visibility = ["//visibility:public"])
+
+firmware(
+    name = "left_legacy",
+    graph = LEFT_LEGACY,
+    variant = "left_legacy",
+    version = "//:legacy_version",
+)
+
+firmware(
+    name = "left_studio",
+    graph = LEFT_STUDIO,
+    variant = "left_studio",
+    version = "//:studio_version",
+)
+
+firmware(
+    name = "right_legacy",
+    graph = RIGHT,
+    variant = "right_legacy",
+    version = "//:legacy_version",
+)
+
+firmware(
+    name = "right_studio",
+    graph = RIGHT,
+    variant = "right_studio",
+    version = "//:studio_version",
+)

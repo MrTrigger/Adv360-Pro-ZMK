@@ -1,0 +1,20 @@
+--- a/generator/proto/__init__.py
++++ b/generator/proto/__init__.py
+@@ -7,7 +7,7 @@
+ import tempfile
+ import shutil
+ import traceback
+-import pkg_resources
++from importlib.resources import files
+ from ._utils import has_grpcio_protoc, invoke_protoc, print_versions
+ 
+ # Compatibility layer to make TemporaryDirectory() available on Python 2.
+@@ -42,7 +42,7 @@
+     if has_grpcio_protoc():
+         # grpcio-tools has an extra CLI argument
+         # from grpc.tools.protoc __main__ invocation.
+-        _builtin_proto_include = pkg_resources.resource_filename('grpc_tools', '_proto')
++        _builtin_proto_include = str(files('grpc_tools') / '_proto')
+         cmd.append("-I={}".format(_builtin_proto_include))
+ 
+     try:

@@ -1,0 +1,69 @@
+#!/usr/bin/env python3
+"""Build native keyboard firmware and preserve timestamped UF2 artifact names."""
+
+import argparse
+from datetime import datetime, timezone
+import json
+import os
+from pathlib import Path
+import re
+import shutil
+import subprocess
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def git(*arguments):
+    return subprocess.check_output(["git", *arguments], cwd=ROOT, text=True).strip()
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--side", choices=["left", "right", "all"], default="all")
+    parser.add_argument("--flavor", choices=["legacy", "studio", "all"], default="all")
+    parser.add_argument("--timestamp", default=os.environ.get("TIMESTAMP") or datetime.now(timezone.utc).strftime("%Y%m%d%H%M"))
+    parser.add_argument("--date")
+    parser.add_argument("--branch")
+    parser.add_argument("--commit")
+    args = parser.parse_args()
+    date = args.date or args.timestamp[:8]
+    try:
+        datetime.strptime(args.timestamp, "%Y%m%d%H%M")
+        datetime.strptime(date, "%Y%m%d")
+        if len(args.timestamp) != 12 or len(date) != 8:
+            raise ValueError("Wrong date length")
+    except ValueError:
+        parser.error("--timestamp must be YYYYMMDDHHMM and --date must be YYYYMMDD")
+    commit = args.commit or os.environ.get("COMMIT") or git("rev-parse", "--short", "HEAD")
+    if not re.fullmatch(r"[0-9a-fA-F]{7,40}", commit):
+        parser.error("--commit must be a Git hash of 7 to 40 hexadecimal characters")
+    branch = args.branch if args.branch is not None else git("rev-parse", "--abbrev-ref", "HEAD")[:4]
+    sides = ["left", "right"] if args.side == "all" else [args.side]
+    flavors = ["legacy", "studio"] if args.flavor == "all" else [args.flavor]
+    variants = [side + "_" + flavor for flavor in flavors for side in sides]
+    extensions = ["elf", "hex", "uf2"]
+    paths = [f"firmware/native/{variant}/zephyr/zmk.{ext}" for variant in variants for ext in extensions]
+    state = Path(os.environ.get("ADV_BAZEL_STATE", ROOT / ".local/bazel")).resolve()
+    environment = dict(os.environ, ADV_BAZEL_STATE=str(state), ADV_BAZEL_EXPORT="1", ADV_BAZEL_EXPORT_PATHS=json.dumps(paths))
+    subprocess.run([str(ROOT / "scripts/bzl"), "build", *["//firmware:" + variant for variant in variants],
+                    "--define=ADV_BUILD_DATE=" + date, "--define=ADV_BUILD_BRANCH=" + branch,
+                    "--define=ADV_BUILD_COMMIT=" + commit], cwd=ROOT, env=environment, check=True)
+    for relative in paths:
+        exported = state / "artifacts" / relative
+        if not exported.is_file() or exported.is_symlink():
+            raise RuntimeError("Missing regular native firmware export: " + relative)
+    for variant in variants:
+        target = ROOT / "build/native" / variant
+        target.mkdir(parents=True, exist_ok=True)
+        for ext in extensions:
+            shutil.copyfile(state / f"artifacts/firmware/native/{variant}/zephyr/zmk.{ext}", target / ("zmk." + ext))
+        side, flavor = variant.split("_")
+        suffix = "-clique" if flavor == "studio" else ""
+        uf2 = ROOT / "firmware" / f"{args.timestamp}-{commit}-{side}{suffix}.uf2"
+        uf2.parent.mkdir(exist_ok=True)
+        shutil.copyfile(target / "zmk.uf2", uf2)
+        print(uf2.relative_to(ROOT))
+
+
+if __name__ == "__main__":
+    main()

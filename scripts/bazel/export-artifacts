@@ -13,7 +13,7 @@ import tempfile
 def artifact_paths(payload):
     paths = json.loads(payload)
     if not isinstance(paths, list) or not paths:
-        raise ValueError("TF_BAZEL_EXPORT_PATHS must be a nonempty JSON array of artifact paths")
+        raise ValueError("ADV_BAZEL_EXPORT_PATHS must be a nonempty JSON array of artifact paths")
     for path in paths:
         if not isinstance(path, str) or not path or "\0" in path:
             raise ValueError("Artifact paths must be nonempty strings")
