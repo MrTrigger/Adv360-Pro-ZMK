@@ -3,6 +3,7 @@
 import os
 from pathlib import Path
 import pickle
+import shutil
 import tempfile
 import unittest
 
@@ -12,6 +13,34 @@ from ninja_graph import Ninja
 
 
 class NativeToolsTest(unittest.TestCase):
+    @unittest.skipUnless(shutil.which('gcc'), 'Real GCC is needed for prefix-map precedence')
+    def test_relocated_compilation_preserves_zephyr_file_macro_names(self):
+        with tempfile.TemporaryDirectory() as name:
+            root = Path(name)
+            capture = root / 'capture'
+            capture.mkdir()
+            (capture / 'build.ninja').write_text(
+                'rule cc\n  command = /sdk/bin/gcc -E -P -fmacro-prefix-map=/inputs/zephyr=ZEPHYR_BASE '
+                '/inputs/zephyr/example.c -o /capture/build/example.i\n'
+                'build example.i: cc /inputs/zephyr/example.c\n')
+            layout = dict(build='/capture/build', app='/inputs/zmk/app', config='/workspace/config', sdk='/sdk',
+                          paths={'zmk': '/inputs/zmk', 'zephyr': '/inputs/zephyr'}, tools={}, firmware=['example.i'])
+            graph = extract(capture, layout, {}, {'files': []}, '')
+            (root / 'example.c').write_text('const char *source = __FILE__;\n')
+            spec = dict(mode='edge', roots={'@SDK@': str(Path(shutil.which('gcc')).parent.parent)},
+                        tools={'@PYTHON@': '/unused/python', '@PROTOC@': '/unused/protoc'},
+                        project_paths={'@SRC_ZMK@': 'zmk', '@SRC_ZEPHYR@': 'zephyr'},
+                        project_names={'zmk': '@SRC_ZMK@', 'zephyr': '@SRC_ZEPHYR@'},
+                        command=graph['edges'][0]['command'], inputs=[['example.c', '@SRC_ZEPHYR@/example.c']],
+                        outputs=[['result.i', '@BUILD@/example.i']])
+            previous = Path.cwd()
+            try:
+                os.chdir(root)
+                run(spec)
+            finally:
+                os.chdir(previous)
+            self.assertEqual((root / 'result.i').read_text(), 'const char *source = "ZEPHYR_BASE/example.c";\n')
+
     def test_source_file_named_only_in_a_generator_command_is_declared(self):
         with tempfile.TemporaryDirectory() as name:
             build = Path(name)

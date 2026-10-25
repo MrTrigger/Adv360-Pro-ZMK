@@ -144,10 +144,11 @@ def extract(build, layout, configurations, inventory, deps, plan_only=False):
             inputs.add('@BUILD@/zephyr/edt.pickle')
         command = re.sub(r' && @CMAKE@ -E cmake_transform_depfile .*$', '', command)
         if re.search(r'@SDK@/[^ ]*g(?:cc|\+\+) ', command):
-            # Each edge runs in its own temporary layout. Never put that random
-            # directory in DWARF or __FILE__ strings.
+            # Keep fallback macro mappings in the same GCC option family as
+            # Zephyr's later, more specific source mappings. -ffile-prefix-map
+            # overrides those mappings regardless of their argument order.
             command = re.sub(r'(@SDK@/[^ ]*g(?:cc|\+\+) )',
-                             r'\1-ffile-prefix-map=@WORK@=. -fdebug-prefix-map=@WORK@=. ', command)
+                             r'\1-fmacro-prefix-map=@WORK@=. -fdebug-prefix-map=@WORK@=. ', command)
         identifier = 'edge_' + hashlib.sha256('\n'.join(sorted(outputs)).encode()).hexdigest()[:12]
         edges.append(dict(id=identifier, rule=edge['rule'], command=command,
                           outputs=sorted(outputs), inputs=sorted(inputs)))
