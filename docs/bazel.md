@@ -19,3 +19,5 @@ Refresh `MODULE.bazel.lock` explicitly with `scripts/bzl mod deps --lockfile_mod
 ## Validation checkpoints
 
 During implementation, run `python3 -B -m unittest discover -s scripts/tests` for caller changes. The full firmware checkpoint is `scripts/build-firmware`, which builds both halves and flavors. The existing CI selector, manual workflow and weekly regression run remain in place. No keyboard flashing or physical key behavior is implied by a build or cache pass.
+
+The personal cache helper accepts both provisioned curl config lines (`user = "reader-NAME:PASSWORD"`) and bare `reader-NAME:PASSWORD` or `writer-NAME:PASSWORD` values. It sends credentials only to the cache HTTPS origin. Local credential files stay outside Git.

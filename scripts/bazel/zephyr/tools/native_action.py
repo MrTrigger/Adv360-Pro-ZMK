@@ -50,6 +50,12 @@ def relocate(data, mappings, logical):
     return relocate_pickle(data, mappings) if logical.endswith('.pickle') else replace_bytes(data, mappings)
 
 
+def local_path(logical, roots):
+    for token, root in roots.items():
+        logical = logical.replace(token, root)
+    return Path(logical)
+
+
 def run(spec):
     execroot = Path.cwd()
     original_roots = {token: str(execroot / path) for token, path in spec['roots'].items()}
@@ -76,7 +82,7 @@ def run(spec):
             token, relative = logical.split('/', 1)
             if token == '@SDK@':
                 continue
-            target = Path(roots[token]) / relative
+            target = local_path(logical, roots)
             target.parent.mkdir(parents=True, exist_ok=True)
             original = execroot / filename
             if token == '@BUILD@':
@@ -86,8 +92,7 @@ def run(spec):
             else:
                 target.symlink_to(original)
         for _, logical in spec['outputs']:
-            token, relative = logical.split('/', 1)
-            (Path(roots[token]) / relative).parent.mkdir(parents=True, exist_ok=True)
+            local_path(logical, roots).parent.mkdir(parents=True, exist_ok=True)
         environment = dict(os.environ, HOME=str(work / 'home'), USER_CACHE_DIR=str(work / 'cache'),
                            PATH=str(shim) + ':/usr/bin:/bin')
         # A nested py_binary must discover its own wheels and interpreter.
@@ -132,8 +137,7 @@ def run(spec):
         normalizations = {value: token for token, value in roots.items()}
         normalizations[str((Path(roots['@SDK@']) / 'sdk_version').resolve().parent)] = '@SDK@'
         for filename, logical in spec['outputs']:
-            token, relative = logical.split('/', 1)
-            original = Path(roots[token]) / relative
+            original = local_path(logical, roots)
             if not original.is_file() or original.is_symlink():
                 raise RuntimeError('Firmware action did not create a regular output: ' + logical)
             target = execroot / filename

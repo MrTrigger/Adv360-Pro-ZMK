@@ -43,6 +43,27 @@ class NativeToolsTest(unittest.TestCase):
             self.assertEqual(original.read_bytes(), b'#define ROOT "@BUILD@"\n')
             self.assertEqual(original.stat().st_mode & 0o777, 0o444)
 
+    def test_nested_source_tokens_in_object_paths_are_relocated(self):
+        with tempfile.TemporaryDirectory() as name:
+            root = Path(name)
+            (root / 'main.c').write_text('firmware input\n')
+            logical = '@BUILD@/objects/@SRC_ZMK@/app/main.c.obj'
+            spec = dict(mode='edge', roots={'@SDK@': 'sdk'}, tools={'@PYTHON@': '/unused/python', '@PROTOC@': '/unused/protoc'},
+                        project_paths={'@SRC_ZMK@': 'zmk'}, project_names={'zmk': '@SRC_ZMK@'},
+                        command='cat @APP@/main.c > ' + logical,
+                        inputs=[['main.c', '@APP@/main.c']], outputs=[['result.obj', logical]])
+            previous = Path.cwd()
+            try:
+                os.chdir(root)
+                run(spec)
+                spec.update(command='cat ' + logical + ' > @BUILD@/linked.bin',
+                            inputs=[['result.obj', logical]], outputs=[['linked.bin', '@BUILD@/linked.bin']])
+                run(spec)
+            finally:
+                os.chdir(previous)
+            self.assertEqual((root / 'result.obj').read_bytes(), b'firmware input\n')
+            self.assertEqual((root / 'linked.bin').read_bytes(), b'firmware input\n')
+
     def test_binary_output_is_never_rewritten(self):
         self.assertEqual(replace_bytes(b'ELF\0/tmp/example', {'/tmp': '@WORK@'}), b'ELF\0/tmp/example')
 
