@@ -68,6 +68,7 @@ def _step_impl(ctx):
         "roots": roots,
         "project_paths": {_token(project): project["path"] for project in PROJECTS},
         "project_names": {project["name"]: _token(project) for project in PROJECTS},
+        "project_order": [_token(project) for project in PROJECTS],
         "tools": {
             "@PYTHON@": ctx.executable._python.path,
             "@CMAKE@": ctx.file._cmake.path,
@@ -166,6 +167,8 @@ def firmware(name, graph, variant, version):
             for project in PROJECTS:
                 if project["name"] in ["zephyr", "zmk", "nanopb", "zmk-studio-messages"]:
                     inputs[_repo(project) + "tree"] = True
+        elif "@CMAKE@" in edge["command"] and "@SRC_ZEPHYR@" in edge["command"]:
+            inputs["@west_zephyr//:tree"] = True
         mnemonic = "ZmkGenerate"
         if "COMPILER" in edge["rule"]:
             mnemonic = "ZmkCompile"

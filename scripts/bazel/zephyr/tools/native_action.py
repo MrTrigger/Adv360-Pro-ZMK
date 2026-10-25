@@ -99,7 +99,7 @@ def run(spec):
             environment.update(ZEPHYR_BASE=roots['@SRC_ZEPHYR@'], ZEPHYR_TOOLCHAIN_VARIANT='zephyr',
                                ZEPHYR_SDK_INSTALL_DIR=roots['@SDK@'])
             side, flavor = spec['variant'].split('_')
-            modules = [roots[token] for token in spec['project_paths'] if token not in ['@SRC_ZMK@', '@SRC_ZEPHYR@']]
+            modules = [roots[token] for token in spec['project_order'] if token not in ['@SRC_ZMK@', '@SRC_ZEPHYR@']]
             command = [tools['@CMAKE@'], '-S', roots['@APP@'], '-B', str(build), '-GNinja',
                        '-DBOARD=adv360_' + side, '-DZMK_CONFIG=' + roots['@CONFIG@'],
                        '-DZephyr_DIR=' + roots['@SRC_ZEPHYR@'] + '/share/zephyr-package/cmake',
