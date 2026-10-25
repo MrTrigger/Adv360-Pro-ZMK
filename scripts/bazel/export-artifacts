@@ -1,0 +1,71 @@
+#!/usr/bin/env python3
+"""Run a build and export only explicitly named regular-file artifacts."""
+
+import argparse
+import json
+import os
+from pathlib import Path, PurePosixPath
+import shutil
+import subprocess
+import tempfile
+
+
+def artifact_paths(payload):
+    paths = json.loads(payload)
+    if not isinstance(paths, list) or not paths:
+        raise ValueError("TF_BAZEL_EXPORT_PATHS must be a nonempty JSON array of artifact paths")
+    for path in paths:
+        if not isinstance(path, str) or not path or "\0" in path:
+            raise ValueError("Artifact paths must be nonempty strings")
+        relative = PurePosixPath(path)
+        if relative.is_absolute() or ".." in relative.parts or relative.as_posix() != path or path == ".":
+            raise ValueError("Artifact path must be relative without traversal: " + path)
+    if len(set(paths)) != len(paths):
+        raise ValueError("Artifact paths must be unique")
+    return paths
+
+
+def export(source, target, paths):
+    source = source.resolve(strict=True)
+    target.mkdir(parents=True, exist_ok=True)
+    target = target.resolve(strict=True)
+    with tempfile.TemporaryDirectory(prefix=".export-", dir=target) as directory:
+        stage = Path(directory)
+        # Stage every requested file before replacing any old artifact.
+        for path in paths:
+            original = (source / path).resolve(strict=True)
+            if not original.is_relative_to(source) or not original.is_file():
+                raise ValueError("Artifact must be a regular file inside bazel-bin: " + path)
+            destination = target / path
+            if not destination.parent.resolve().is_relative_to(target):
+                raise ValueError("Artifact destination escapes the export directory: " + path)
+            staged = stage / path
+            staged.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(original, staged)
+        for path in paths:
+            destination = target / path
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            os.replace(stage / path, destination)
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("source", type=Path)
+    parser.add_argument("target", type=Path)
+    parser.add_argument("paths", help="JSON array of paths relative to bazel-bin")
+    parser.add_argument("command", nargs=argparse.REMAINDER)
+    args = parser.parse_args()
+    try:
+        paths = artifact_paths(args.paths)
+        if args.command:
+            run = subprocess.run(args.command, check=False)
+            if run.returncode:
+                return run.returncode
+        export(args.source, args.target, paths)
+    except (OSError, ValueError) as error:
+        parser.exit(1, "Artifact export failed: " + str(error) + "\n")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

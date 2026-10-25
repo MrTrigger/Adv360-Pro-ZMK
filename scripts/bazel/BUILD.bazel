@@ -1,0 +1,1 @@
+exports_files(["west-sources.json", "remove-nanopb-builds.patch"])

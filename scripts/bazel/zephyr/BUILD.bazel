@@ -1,0 +1,49 @@
+load("@rules_python//python:defs.bzl", "py_binary", "py_test")
+
+package(default_visibility = ["//visibility:public"])
+
+alias(name = "dtc", actual = "@dtc//:dtc")
+alias(name = "gperf", actual = "@gperf//:gperf")
+
+# Every wheel in the hashed lock, plus the natively packaged sdist-only docopt.
+py_binary(
+    name = "zephyr_python",
+    srcs = ["tools/pyrun.py"],
+    main = "tools/pyrun.py",
+    deps = [
+        "@docopt_sdist//:docopt",
+        "@zephyr_pip//anytree",
+        "@zephyr_pip//canopen",
+        "@zephyr_pip//certifi",
+        "@zephyr_pip//charset_normalizer",
+        "@zephyr_pip//colorama",
+        "@zephyr_pip//idna",
+        "@zephyr_pip//intelhex",
+        "@zephyr_pip//packaging",
+        "@zephyr_pip//patool",
+        "@zephyr_pip//progress",
+        "@zephyr_pip//protobuf",
+        "@zephyr_pip//psutil",
+        "@zephyr_pip//pyelftools",
+        "@zephyr_pip//pykwalify",
+        "@zephyr_pip//pylink_square",
+        "@zephyr_pip//pyserial",
+        "@zephyr_pip//python_can",
+        "@zephyr_pip//python_dateutil",
+        "@zephyr_pip//pyyaml",
+        "@zephyr_pip//requests",
+        "@zephyr_pip//ruamel_yaml",
+        "@zephyr_pip//semver",
+        "@zephyr_pip//setuptools",
+        "@zephyr_pip//six",
+        "@zephyr_pip//tqdm",
+        "@zephyr_pip//typing_extensions",
+        "@zephyr_pip//tzdata",
+        "@zephyr_pip//urllib3",
+        "@zephyr_pip//west",
+        "@zephyr_pip//wrapt",
+    ],
+)
+
+py_test(name = "python_launcher_test", srcs = ["tools/pyrun_test.py"], main = "tools/pyrun_test.py", data = ["tools/pyrun.py"], size = "small")
+
