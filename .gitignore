@@ -1,1 +1,11 @@
 /firmware/*.uf2
+
+# Native build state
+.local/
+bazel-*
+TASKS.md
+__pycache__/
+*.py[cod]
+
+build/
+firmware/*.uf2

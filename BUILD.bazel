@@ -1,0 +1,23 @@
+load("//scripts/bazel/zephyr:native.bzl", "version")
+
+package(default_visibility = ["//visibility:public"])
+
+filegroup(
+    name = "config",
+    srcs = glob(
+        ["config/**"],
+        exclude = ["config/version.dtsi"],
+    ),
+)
+
+version(
+    name = "legacy_version",
+    flavor = ".",
+    output = "metadata/legacy/version.dtsi",
+)
+
+version(
+    name = "studio_version",
+    flavor = "clique",
+    output = "metadata/studio/version.dtsi",
+)

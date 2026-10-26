@@ -37,14 +37,21 @@ jobs:
           BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
           HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
         run: bash .github/ci-scope.sh "$EVENT" "$ACTION" "$BASE" "$HEAD" "$DRAFT" >> "$GITHUB_OUTPUT"
+      - name: Check native callers and version metadata
+        if: steps.scope.outputs.app == 'true'
+        run: |
+          python3 -B -m unittest discover -s scripts/tests
+          python3 scripts/bazel/zephyr/tools/native_tools_test.py
 
   build:
     needs: changes
     if: ${{ !cancelled() && !(needs.changes.result == 'success' && needs.changes.outputs.firmware == 'false') }}
     runs-on: ubuntu-latest
-    container:
-      image: zmkfirmware/zmk-build-arm:stable
     name: Build (Legacy)
+    env:
+      CI: '1'
+      ADV_BAZEL_CACHE: read
+      PERSONAL_BAZEL_CACHE_CREDENTIAL: ${{ secrets.PERSONAL_BAZEL_CACHE_READER_CREDENTIAL }}
     steps:
       - name: Require successful validation plan
         env:
@@ -53,61 +60,28 @@ jobs:
         run: test "$PLAN_RESULT" = success && test "$RUN_SUITE" = true
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Get version data
-        id: get_info
+      - name: Build native firmware
+        shell: bash
         run: |
-          timestamp=$(date +"%Y%m%d%H%M")
-          commit=$(echo "${{ github.sha }}" | cut -c1-7)
-          file_prefix=$timestamp-$commit
-          branch_name=$(echo "${{ github.ref }}" | awk -F'/' '{print $3}' | cut -c1-4)
-          echo "file_prefix=$file_prefix" >> $GITHUB_OUTPUT
-          bin/get_version.sh $branch_name $commit
-      - name: Cache west modules
-        uses: actions/cache@v4
-        env:
-          cache-name: cache-zephyr-modules
-        with:
-          path: |
-            modules/
-            tools/
-            zephyr/
-            bootloader/
-            zmk/
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('config/west.yml') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
-      - name: West Init
-        run: west init -l config
-      - name: West Update
-        run: west update
-      - name: West Zephyr export
-        run: west zephyr-export
-      - name: West Build (left)
-        run: west build -s zmk/app -d build/left -b adv360_left -- -DZMK_CONFIG="${GITHUB_WORKSPACE}/config"
-      - name: Adv360 Left Kconfig file
-        run: grep -vE '(^#|^$)' build/left/zephyr/.config
-      - name: West Build (right)
-        run: west build -s zmk/app -d build/right -b adv360_right -- -DZMK_CONFIG="${GITHUB_WORKSPACE}/config"
-      - name: Adv360 Right Kconfig file
-        run: grep -vE '(^#|^$)' build/right/zephyr/.config
-      - name: Rename zmk.uf2
-        run: cp build/left/zephyr/zmk.uf2 ${{ steps.get_info.outputs.file_prefix }}-left.uf2 && cp build/right/zephyr/zmk.uf2 ${{ steps.get_info.outputs.file_prefix }}-right.uf2
+          commit=${GITHUB_SHA:0:7}
+          branch=${GITHUB_REF_NAME:0:4}
+          scripts/build-firmware --flavor legacy --commit "$commit" --branch "$branch"
       - name: Archive (Adv360)
         uses: actions/upload-artifact@v4
         with:
           name: firmware-no-clique
-          path: |
-            ${{ steps.get_info.outputs.file_prefix }}-left.uf2
-            ${{ steps.get_info.outputs.file_prefix }}-right.uf2
+          path: firmware/*.uf2
+          if-no-files-found: error
+
   build-clique:
     needs: changes
     if: ${{ !cancelled() && !(needs.changes.result == 'success' && needs.changes.outputs.firmware == 'false') }}
     runs-on: ubuntu-latest
-    container:
-      image: zmkfirmware/zmk-build-arm:stable
     name: Build (Clique)
+    env:
+      CI: '1'
+      ADV_BAZEL_CACHE: read
+      PERSONAL_BAZEL_CACHE_CREDENTIAL: ${{ secrets.PERSONAL_BAZEL_CACHE_READER_CREDENTIAL }}
     steps:
       - name: Require successful validation plan
         env:
@@ -116,51 +90,15 @@ jobs:
         run: test "$PLAN_RESULT" = success && test "$RUN_SUITE" = true
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Get version data
-        id: get_info
+      - name: Build native firmware
+        shell: bash
         run: |
-          timestamp=$(date +"%Y%m%d%H%M")
-          commit=$(echo "${{ github.sha }}" | cut -c1-7)
-          file_prefix=$timestamp-$commit
-          branch_name=$(echo "${{ github.ref }}" | awk -F'/' '{print $3}' | cut -c1-4)
-          echo "file_prefix=$file_prefix" >> $GITHUB_OUTPUT
-          bin/get_version.sh $branch_name $commit clique
-      - name: Cache west modules
-        uses: actions/cache@v4
-        env:
-          cache-name: cache-zephyr-modules
-        with:
-          path: |
-            modules/
-            tools/
-            zephyr/
-            bootloader/
-            zmk/
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('config/west.yml') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
-      - name: West Init
-        run: west init -l config
-      - name: West Update
-        run: west update
-      - name: West Zephyr export
-        run: west zephyr-export
-      - name: West Build (left)
-        run: west build -s zmk/app -d build/left -b adv360_left -S studio-rpc-usb-uart -- -DZMK_CONFIG="${GITHUB_WORKSPACE}/config" -DCONFIG_ZMK_STUDIO=y
-      - name: Adv360 Left Kconfig file
-        run: grep -vE '(^#|^$)' build/left/zephyr/.config
-      - name: West Build (right)
-        run: west build -s zmk/app -d build/right -b adv360_right -- -DZMK_CONFIG="${GITHUB_WORKSPACE}/config"
-      - name: Adv360 Right Kconfig file
-        run: grep -vE '(^#|^$)' build/right/zephyr/.config
-      - name: Rename zmk.uf2
-        run: cp build/left/zephyr/zmk.uf2 ${{ steps.get_info.outputs.file_prefix }}-left.uf2 && cp build/right/zephyr/zmk.uf2 ${{ steps.get_info.outputs.file_prefix }}-right.uf2
+          commit=${GITHUB_SHA:0:7}
+          branch=${GITHUB_REF_NAME:0:4}
+          scripts/build-firmware --flavor studio --commit "$commit" --branch "$branch"
       - name: Archive (Adv360)
         uses: actions/upload-artifact@v4
         with:
           name: firmware-clique
-          path: |
-            ${{ steps.get_info.outputs.file_prefix }}-left.uf2
-            ${{ steps.get_info.outputs.file_prefix }}-right.uf2
+          path: firmware/*.uf2
+          if-no-files-found: error

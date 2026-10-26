@@ -1,0 +1,800 @@
+{
+  "schema": 1,
+  "scope": "Frozen West revisions and candidate Nordic reference inputs; native closure unqualified",
+  "manifest_sha256": "4d487bc9df5a8091c5e01ad86bf641cd41142169584604d65f9be3f3be8f2c98",
+  "zmk_manifest_sha256": "2607385400e5b76714440926eb96976bd9b414257dc1d0e0941ee7d8238757bb",
+  "zephyr_manifest_sha256": "79d7d82af8142ed520e056b130117016d44aad94947810dd724c909a0bf231aa",
+  "minimum_sdk": "0.16",
+  "projects": [
+    {
+      "name": "zmk",
+      "repository": "refil/zmk",
+      "requested_revision": "adv360-z3.5-2",
+      "path": "zmk",
+      "revision": "d93499bb877f2711989e6cbbe1feed9e9a792ca3",
+      "import": "app/west.yml"
+    },
+    {
+      "name": "zephyr",
+      "repository": "zmkfirmware/zephyr",
+      "requested_revision": "v3.5.0+zmk-fixes",
+      "path": "zephyr",
+      "revision": "dacab4875df72109b96cc8977547a0dc04875bcd",
+      "import": {
+        "name-blocklist": [
+          "ci-tools",
+          "hal_altera",
+          "hal_cypress",
+          "hal_infineon",
+          "hal_microchip",
+          "hal_nxp",
+          "hal_openisa",
+          "hal_silabs",
+          "hal_xtensa",
+          "hal_st",
+          "hal_ti",
+          "loramac-node",
+          "mcuboot",
+          "mcumgr",
+          "net-tools",
+          "openthread",
+          "edtt",
+          "trusted-firmware-m"
+        ]
+      }
+    },
+    {
+      "name": "nanopb",
+      "repository": "zmkfirmware/nanopb",
+      "requested_revision": "8c60555d6277a0360c876bd85d491fc4fb0cd74a",
+      "path": "modules/lib/nanopb",
+      "revision": "8c60555d6277a0360c876bd85d491fc4fb0cd74a"
+    },
+    {
+      "name": "zmk-studio-messages",
+      "repository": "zmkfirmware/zmk-studio-messages",
+      "requested_revision": "6cb4c283e76209d59c45fbcb218800cd19e9339d",
+      "path": "modules/msgs/zmk-studio-messages",
+      "revision": "6cb4c283e76209d59c45fbcb218800cd19e9339d"
+    },
+    {
+      "name": "acpica",
+      "repository": "zephyrproject-rtos/acpica",
+      "requested_revision": "0333c2af13179f9b33d495cf7cb9a509f751cbb1",
+      "path": "modules/lib/acpica",
+      "revision": "0333c2af13179f9b33d495cf7cb9a509f751cbb1"
+    },
+    {
+      "name": "bsim",
+      "repository": "zephyrproject-rtos/babblesim-manifest",
+      "requested_revision": "384a091445c57b44ac8cbd18ebd245b47c71db94",
+      "path": "tools/bsim",
+      "revision": "384a091445c57b44ac8cbd18ebd245b47c71db94"
+    },
+    {
+      "name": "babblesim_base",
+      "repository": "BabbleSim/base",
+      "requested_revision": "19d62424c0802c6c9fc15528febe666e40f372a1",
+      "path": "tools/bsim/components",
+      "revision": "19d62424c0802c6c9fc15528febe666e40f372a1"
+    },
+    {
+      "name": "babblesim_ext_2G4_libPhyComv1",
+      "repository": "BabbleSim/ext_2G4_libPhyComv1",
+      "requested_revision": "9018113a362fa6c9e8f4b9cab9e5a8f12cc46b94",
+      "path": "tools/bsim/components/ext_2G4_libPhyComv1",
+      "revision": "9018113a362fa6c9e8f4b9cab9e5a8f12cc46b94"
+    },
+    {
+      "name": "babblesim_ext_2G4_phy_v1",
+      "repository": "BabbleSim/ext_2G4_phy_v1",
+      "requested_revision": "d47c6dd90035b41b14f6921785ccb7b8484868e2",
+      "path": "tools/bsim/components/ext_2G4_phy_v1",
+      "revision": "d47c6dd90035b41b14f6921785ccb7b8484868e2"
+    },
+    {
+      "name": "babblesim_ext_2G4_channel_NtNcable",
+      "repository": "BabbleSim/ext_2G4_channel_NtNcable",
+      "requested_revision": "20a38c997f507b0aa53817aab3d73a462fff7af1",
+      "path": "tools/bsim/components/ext_2G4_channel_NtNcable",
+      "revision": "20a38c997f507b0aa53817aab3d73a462fff7af1"
+    },
+    {
+      "name": "babblesim_ext_2G4_channel_multiatt",
+      "repository": "BabbleSim/ext_2G4_channel_multiatt",
+      "requested_revision": "bde72a57384dde7a4310bcf3843469401be93074",
+      "path": "tools/bsim/components/ext_2G4_channel_multiatt",
+      "revision": "bde72a57384dde7a4310bcf3843469401be93074"
+    },
+    {
+      "name": "babblesim_ext_2G4_modem_magic",
+      "repository": "BabbleSim/ext_2G4_modem_magic",
+      "requested_revision": "cb70771794f0bf6f262aa474848611c68ae8f1ed",
+      "path": "tools/bsim/components/ext_2G4_modem_magic",
+      "revision": "cb70771794f0bf6f262aa474848611c68ae8f1ed"
+    },
+    {
+      "name": "babblesim_ext_2G4_modem_BLE_simple",
+      "repository": "BabbleSim/ext_2G4_modem_BLE_simple",
+      "requested_revision": "809ab073159c9ab6686c2fea5749b0702e0909f7",
+      "path": "tools/bsim/components/ext_2G4_modem_BLE_simple",
+      "revision": "809ab073159c9ab6686c2fea5749b0702e0909f7"
+    },
+    {
+      "name": "babblesim_ext_2G4_device_burst_interferer",
+      "repository": "BabbleSim/ext_2G4_device_burst_interferer",
+      "requested_revision": "5b5339351d6e6a2368c686c734dc8b2fc65698fc",
+      "path": "tools/bsim/components/ext_2G4_device_burst_interferer",
+      "revision": "5b5339351d6e6a2368c686c734dc8b2fc65698fc"
+    },
+    {
+      "name": "babblesim_ext_2G4_device_WLAN_actmod",
+      "repository": "BabbleSim/ext_2G4_device_WLAN_actmod",
+      "requested_revision": "9cb6d8e72695f6b785e57443f0629a18069d6ce4",
+      "path": "tools/bsim/components/ext_2G4_device_WLAN_actmod",
+      "revision": "9cb6d8e72695f6b785e57443f0629a18069d6ce4"
+    },
+    {
+      "name": "babblesim_ext_2G4_device_playback",
+      "repository": "BabbleSim/ext_2G4_device_playback",
+      "requested_revision": "85c645929cf1ce995d8537107d9dcbd12ed64036",
+      "path": "tools/bsim/components/ext_2G4_device_playback",
+      "revision": "85c645929cf1ce995d8537107d9dcbd12ed64036"
+    },
+    {
+      "name": "babblesim_ext_libCryptov1",
+      "repository": "BabbleSim/ext_libCryptov1",
+      "requested_revision": "eed6d7038e839153e340bd333bc43541cb90ba64",
+      "path": "tools/bsim/components/ext_libCryptov1",
+      "revision": "eed6d7038e839153e340bd333bc43541cb90ba64"
+    },
+    {
+      "name": "canopennode",
+      "repository": "zephyrproject-rtos/canopennode",
+      "requested_revision": "dec12fa3f0d790cafa8414a4c2930ea71ab72ffd",
+      "path": "modules/lib/canopennode",
+      "revision": "dec12fa3f0d790cafa8414a4c2930ea71ab72ffd"
+    },
+    {
+      "name": "cmsis",
+      "repository": "zephyrproject-rtos/cmsis",
+      "requested_revision": "5a00331455dd74e31e80efa383a489faea0590e3",
+      "path": "modules/hal/cmsis",
+      "revision": "5a00331455dd74e31e80efa383a489faea0590e3"
+    },
+    {
+      "name": "cmsis-dsp",
+      "repository": "zephyrproject-rtos/cmsis-dsp",
+      "requested_revision": "ff7b5fd1ea5f094665c090c343ec44e74dc0b193",
+      "path": "modules/lib/cmsis-dsp",
+      "revision": "ff7b5fd1ea5f094665c090c343ec44e74dc0b193"
+    },
+    {
+      "name": "cmsis-nn",
+      "repository": "zephyrproject-rtos/cmsis-nn",
+      "requested_revision": "0c8669d81381ccf3b1a01d699f3b68b50134a99f",
+      "path": "modules/lib/cmsis-nn",
+      "revision": "0c8669d81381ccf3b1a01d699f3b68b50134a99f"
+    },
+    {
+      "name": "fatfs",
+      "repository": "zephyrproject-rtos/fatfs",
+      "requested_revision": "427159bf95ea49b7680facffaa29ad506b42709b",
+      "path": "modules/fs/fatfs",
+      "revision": "427159bf95ea49b7680facffaa29ad506b42709b"
+    },
+    {
+      "name": "hal_ambiq",
+      "repository": "zephyrproject-rtos/hal_ambiq",
+      "requested_revision": "0a7c99325aa73a1ef777501da91c2c6608661e56",
+      "path": "modules/hal/ambiq",
+      "revision": "0a7c99325aa73a1ef777501da91c2c6608661e56"
+    },
+    {
+      "name": "hal_atmel",
+      "repository": "zephyrproject-rtos/hal_atmel",
+      "requested_revision": "5ab43007eda3f380c125f957f03638d2e8d1144d",
+      "path": "modules/hal/atmel",
+      "revision": "5ab43007eda3f380c125f957f03638d2e8d1144d"
+    },
+    {
+      "name": "hal_espressif",
+      "repository": "zephyrproject-rtos/hal_espressif",
+      "requested_revision": "31fc5758f3507f8f0af00b1dea1a0df7af99bfc0",
+      "path": "modules/hal/espressif",
+      "revision": "31fc5758f3507f8f0af00b1dea1a0df7af99bfc0"
+    },
+    {
+      "name": "hal_ethos_u",
+      "repository": "zephyrproject-rtos/hal_ethos_u",
+      "requested_revision": "90ada2ea5681b2a2722a10d2898eac34c2510791",
+      "path": "modules/hal/ethos_u",
+      "revision": "90ada2ea5681b2a2722a10d2898eac34c2510791"
+    },
+    {
+      "name": "hal_gigadevice",
+      "repository": "zephyrproject-rtos/hal_gigadevice",
+      "requested_revision": "2994b7dde8b0b0fa9b9c0ccb13474b6a486cddc3",
+      "path": "modules/hal/gigadevice",
+      "revision": "2994b7dde8b0b0fa9b9c0ccb13474b6a486cddc3"
+    },
+    {
+      "name": "hal_intel",
+      "repository": "zephyrproject-rtos/hal_intel",
+      "requested_revision": "b3b43d4e3da7ba483611bbbea7ef8af92c69df31",
+      "path": "modules/hal/intel",
+      "revision": "b3b43d4e3da7ba483611bbbea7ef8af92c69df31"
+    },
+    {
+      "name": "hal_nordic",
+      "repository": "zephyrproject-rtos/hal_nordic",
+      "requested_revision": "884c4d61746bc35fbd379c169fc87ddb56c6461d",
+      "path": "modules/hal/nordic",
+      "revision": "884c4d61746bc35fbd379c169fc87ddb56c6461d"
+    },
+    {
+      "name": "hal_nuvoton",
+      "repository": "zephyrproject-rtos/hal_nuvoton",
+      "requested_revision": "3e0a4c4d3328b2f72b164219add19d5308b53cb5",
+      "path": "modules/hal/nuvoton",
+      "revision": "3e0a4c4d3328b2f72b164219add19d5308b53cb5"
+    },
+    {
+      "name": "hal_quicklogic",
+      "repository": "zephyrproject-rtos/hal_quicklogic",
+      "requested_revision": "b3a66fe6d04d87fd1533a5c8de51d0599fcd08d0",
+      "path": "modules/hal/quicklogic",
+      "revision": "b3a66fe6d04d87fd1533a5c8de51d0599fcd08d0"
+    },
+    {
+      "name": "hal_renesas",
+      "repository": "zephyrproject-rtos/hal_renesas",
+      "requested_revision": "a6cf2af9140e014fbbc48d2b6deb802231dd369f",
+      "path": "modules/hal/renesas",
+      "revision": "a6cf2af9140e014fbbc48d2b6deb802231dd369f"
+    },
+    {
+      "name": "hal_rpi_pico",
+      "repository": "zephyrproject-rtos/hal_rpi_pico",
+      "requested_revision": "fba7162cc7bee06d0149622bbcaac4e41062d368",
+      "path": "modules/hal/rpi_pico",
+      "revision": "fba7162cc7bee06d0149622bbcaac4e41062d368"
+    },
+    {
+      "name": "hal_stm32",
+      "repository": "zephyrproject-rtos/hal_stm32",
+      "requested_revision": "89ef0a3383edebf661073073bcdf6e2836fe90ee",
+      "path": "modules/hal/stm32",
+      "revision": "89ef0a3383edebf661073073bcdf6e2836fe90ee"
+    },
+    {
+      "name": "hal_telink",
+      "repository": "zephyrproject-rtos/hal_telink",
+      "requested_revision": "38573af589173259801ae6c2b34b7d4c9e626746",
+      "path": "modules/hal/telink",
+      "revision": "38573af589173259801ae6c2b34b7d4c9e626746"
+    },
+    {
+      "name": "hal_wurthelektronik",
+      "repository": "zephyrproject-rtos/hal_wurthelektronik",
+      "requested_revision": "24ca9873c3d608fad1fea0431836bc8f144c132e",
+      "path": "modules/hal/wurthelektronik",
+      "revision": "24ca9873c3d608fad1fea0431836bc8f144c132e"
+    },
+    {
+      "name": "libmetal",
+      "repository": "zephyrproject-rtos/libmetal",
+      "requested_revision": "b91611a6f47dd29fb24c46e5621e797557f80ec6",
+      "path": "modules/hal/libmetal",
+      "revision": "b91611a6f47dd29fb24c46e5621e797557f80ec6"
+    },
+    {
+      "name": "liblc3",
+      "repository": "zephyrproject-rtos/liblc3",
+      "requested_revision": "448f3de31f49a838988a162ef1e23a89ddf2d2ed",
+      "path": "modules/lib/liblc3",
+      "revision": "448f3de31f49a838988a162ef1e23a89ddf2d2ed"
+    },
+    {
+      "name": "littlefs",
+      "repository": "zephyrproject-rtos/littlefs",
+      "requested_revision": "ca583fd297ceb48bced3c2548600dc615d67af24",
+      "path": "modules/fs/littlefs",
+      "revision": "ca583fd297ceb48bced3c2548600dc615d67af24"
+    },
+    {
+      "name": "lvgl",
+      "repository": "zephyrproject-rtos/lvgl",
+      "requested_revision": "8a6a2d1d29d17d1e4bdc94c243c146a39d635fdd",
+      "path": "modules/lib/gui/lvgl",
+      "revision": "8a6a2d1d29d17d1e4bdc94c243c146a39d635fdd"
+    },
+    {
+      "name": "mbedtls",
+      "repository": "zephyrproject-rtos/mbedtls",
+      "requested_revision": "c38dc78d9a8dcbe43b898cc1171ab33ba3e6fc26",
+      "path": "modules/crypto/mbedtls",
+      "revision": "c38dc78d9a8dcbe43b898cc1171ab33ba3e6fc26"
+    },
+    {
+      "name": "mipi-sys-t",
+      "repository": "zephyrproject-rtos/mipi-sys-t",
+      "requested_revision": "a819419603a2dfcb47f7f39092e1bc112e45d1ef",
+      "path": "modules/debug/mipi-sys-t",
+      "revision": "a819419603a2dfcb47f7f39092e1bc112e45d1ef"
+    },
+    {
+      "name": "nrf_hw_models",
+      "repository": "zephyrproject-rtos/nrf_hw_models",
+      "requested_revision": "f4595802d32d103718bf50b3d390b7a450895843",
+      "path": "modules/bsim_hw_models/nrf_hw_models",
+      "revision": "f4595802d32d103718bf50b3d390b7a450895843"
+    },
+    {
+      "name": "open-amp",
+      "repository": "zephyrproject-rtos/open-amp",
+      "requested_revision": "42b7c577714b8f22ce82a901e19c1814af4609a8",
+      "path": "modules/lib/open-amp",
+      "revision": "42b7c577714b8f22ce82a901e19c1814af4609a8"
+    },
+    {
+      "name": "percepio",
+      "repository": "zephyrproject-rtos/percepio",
+      "requested_revision": "a3728efccc47dd372f40e6313589ca4c5cc7d5e9",
+      "path": "modules/debug/percepio",
+      "revision": "a3728efccc47dd372f40e6313589ca4c5cc7d5e9"
+    },
+    {
+      "name": "picolibc",
+      "repository": "zephyrproject-rtos/picolibc",
+      "requested_revision": "d07c38ff051386f8e09a143ea0a6c1d6d66dd1d8",
+      "path": "modules/lib/picolibc",
+      "revision": "d07c38ff051386f8e09a143ea0a6c1d6d66dd1d8"
+    },
+    {
+      "name": "segger",
+      "repository": "zephyrproject-rtos/segger",
+      "requested_revision": "9d0191285956cef43daf411edc2f1a7788346def",
+      "path": "modules/debug/segger",
+      "revision": "9d0191285956cef43daf411edc2f1a7788346def"
+    },
+    {
+      "name": "tinycrypt",
+      "repository": "zephyrproject-rtos/tinycrypt",
+      "requested_revision": "3e9a49d2672ec01435ffbf0d788db6d95ef28de0",
+      "path": "modules/crypto/tinycrypt",
+      "revision": "3e9a49d2672ec01435ffbf0d788db6d95ef28de0"
+    },
+    {
+      "name": "trusted-firmware-a",
+      "repository": "zephyrproject-rtos/trusted-firmware-a",
+      "requested_revision": "421dc050278287839f5c70019bd6aec617f2bbdb",
+      "path": "modules/tee/tf-a/trusted-firmware-a",
+      "revision": "421dc050278287839f5c70019bd6aec617f2bbdb"
+    },
+    {
+      "name": "uoscore-uedhoc",
+      "repository": "zephyrproject-rtos/uoscore-uedhoc",
+      "requested_revision": "5fe2cb613bd7e4590bd1b00c2adf181ac0229379",
+      "path": "modules/lib/uoscore-uedhoc",
+      "revision": "5fe2cb613bd7e4590bd1b00c2adf181ac0229379"
+    },
+    {
+      "name": "zcbor",
+      "repository": "zephyrproject-rtos/zcbor",
+      "requested_revision": "67fd8bb88d3136738661fa8bb5f9989103f4599e",
+      "path": "modules/lib/zcbor",
+      "revision": "67fd8bb88d3136738661fa8bb5f9989103f4599e"
+    }
+  ],
+  "archives": {
+    "zmk": {
+      "repository": "refil/zmk",
+      "revision": "d93499bb877f2711989e6cbbe1feed9e9a792ca3",
+      "url": "https://codeload.github.com/refil/zmk/tar.gz/d93499bb877f2711989e6cbbe1feed9e9a792ca3",
+      "sha256": "8c778299d1918aa1808b4144dbbffc5eec1af9d4cf27dfa2060218d7804a4ed5",
+      "strip_prefix": "zmk-d93499bb877f2711989e6cbbe1feed9e9a792ca3",
+      "west_path": "zmk"
+    },
+    "zephyr": {
+      "repository": "zmkfirmware/zephyr",
+      "revision": "dacab4875df72109b96cc8977547a0dc04875bcd",
+      "url": "https://codeload.github.com/zmkfirmware/zephyr/tar.gz/dacab4875df72109b96cc8977547a0dc04875bcd",
+      "sha256": "0ffcf9661f38abee6a1fa7856b8137d7a2fa9ee3db1ee35d64cdfc4e8436770f",
+      "strip_prefix": "zephyr-dacab4875df72109b96cc8977547a0dc04875bcd",
+      "west_path": "zephyr"
+    },
+    "nanopb": {
+      "repository": "zmkfirmware/nanopb",
+      "revision": "8c60555d6277a0360c876bd85d491fc4fb0cd74a",
+      "url": "https://codeload.github.com/zmkfirmware/nanopb/tar.gz/8c60555d6277a0360c876bd85d491fc4fb0cd74a",
+      "sha256": "f5d64ab3a2f51e6353a8875a6cd2d061dbbdfaf97c5f244f155fd30cd26924cd",
+      "strip_prefix": "nanopb-8c60555d6277a0360c876bd85d491fc4fb0cd74a",
+      "west_path": "modules/lib/nanopb"
+    },
+    "zmk-studio-messages": {
+      "repository": "zmkfirmware/zmk-studio-messages",
+      "revision": "6cb4c283e76209d59c45fbcb218800cd19e9339d",
+      "url": "https://codeload.github.com/zmkfirmware/zmk-studio-messages/tar.gz/6cb4c283e76209d59c45fbcb218800cd19e9339d",
+      "sha256": "f53f8c6011d256e4fdffa681c45a74b2fb2255d085ccb6ff876b231420be8c5b",
+      "strip_prefix": "zmk-studio-messages-6cb4c283e76209d59c45fbcb218800cd19e9339d",
+      "west_path": "modules/msgs/zmk-studio-messages"
+    },
+    "acpica": {
+      "repository": "zephyrproject-rtos/acpica",
+      "revision": "0333c2af13179f9b33d495cf7cb9a509f751cbb1",
+      "url": "https://codeload.github.com/zephyrproject-rtos/acpica/tar.gz/0333c2af13179f9b33d495cf7cb9a509f751cbb1",
+      "sha256": "01216ea2175c5bf02ab1f8f232642fb656df488460ee3bab74d4497f9658e0d7",
+      "strip_prefix": "acpica-0333c2af13179f9b33d495cf7cb9a509f751cbb1",
+      "west_path": "modules/lib/acpica"
+    },
+    "bsim": {
+      "repository": "zephyrproject-rtos/babblesim-manifest",
+      "revision": "384a091445c57b44ac8cbd18ebd245b47c71db94",
+      "url": "https://codeload.github.com/zephyrproject-rtos/babblesim-manifest/tar.gz/384a091445c57b44ac8cbd18ebd245b47c71db94",
+      "sha256": "08e6a6617f7ca83cb881db541d8317de7665ec7cd9d44d978dfa0e44f402f1b2",
+      "strip_prefix": "babblesim-manifest-384a091445c57b44ac8cbd18ebd245b47c71db94",
+      "west_path": "tools/bsim"
+    },
+    "babblesim_base": {
+      "repository": "BabbleSim/base",
+      "revision": "19d62424c0802c6c9fc15528febe666e40f372a1",
+      "url": "https://codeload.github.com/BabbleSim/base/tar.gz/19d62424c0802c6c9fc15528febe666e40f372a1",
+      "sha256": "be5ceca5c3122f44316eddd61260e60b28dcfff53e1ce9bb1f255d73a2c76e4c",
+      "strip_prefix": "base-19d62424c0802c6c9fc15528febe666e40f372a1",
+      "west_path": "tools/bsim/components"
+    },
+    "babblesim_ext_2G4_libPhyComv1": {
+      "repository": "BabbleSim/ext_2G4_libPhyComv1",
+      "revision": "9018113a362fa6c9e8f4b9cab9e5a8f12cc46b94",
+      "url": "https://codeload.github.com/BabbleSim/ext_2G4_libPhyComv1/tar.gz/9018113a362fa6c9e8f4b9cab9e5a8f12cc46b94",
+      "sha256": "c8443ac51c0381d45ccb0955de27c3e148c5dbbdd4d9b1b0f5e9957e0ccb4604",
+      "strip_prefix": "ext_2G4_libPhyComv1-9018113a362fa6c9e8f4b9cab9e5a8f12cc46b94",
+      "west_path": "tools/bsim/components/ext_2G4_libPhyComv1"
+    },
+    "babblesim_ext_2G4_phy_v1": {
+      "repository": "BabbleSim/ext_2G4_phy_v1",
+      "revision": "d47c6dd90035b41b14f6921785ccb7b8484868e2",
+      "url": "https://codeload.github.com/BabbleSim/ext_2G4_phy_v1/tar.gz/d47c6dd90035b41b14f6921785ccb7b8484868e2",
+      "sha256": "a0be130505b503e02d3ff9c155b6282cd4513e2a79c41f2dd12c55ebb2878fc5",
+      "strip_prefix": "ext_2G4_phy_v1-d47c6dd90035b41b14f6921785ccb7b8484868e2",
+      "west_path": "tools/bsim/components/ext_2G4_phy_v1"
+    },
+    "babblesim_ext_2G4_channel_NtNcable": {
+      "repository": "BabbleSim/ext_2G4_channel_NtNcable",
+      "revision": "20a38c997f507b0aa53817aab3d73a462fff7af1",
+      "url": "https://codeload.github.com/BabbleSim/ext_2G4_channel_NtNcable/tar.gz/20a38c997f507b0aa53817aab3d73a462fff7af1",
+      "sha256": "fa2f489b32c48b5da529e9f746c878c88396f0481a0b0b662f2b7352aba8fa4e",
+      "strip_prefix": "ext_2G4_channel_NtNcable-20a38c997f507b0aa53817aab3d73a462fff7af1",
+      "west_path": "tools/bsim/components/ext_2G4_channel_NtNcable"
+    },
+    "babblesim_ext_2G4_channel_multiatt": {
+      "repository": "BabbleSim/ext_2G4_channel_multiatt",
+      "revision": "bde72a57384dde7a4310bcf3843469401be93074",
+      "url": "https://codeload.github.com/BabbleSim/ext_2G4_channel_multiatt/tar.gz/bde72a57384dde7a4310bcf3843469401be93074",
+      "sha256": "e533775de401538bc09d80081c3054a7592ad998d163249aea6612c20affdc06",
+      "strip_prefix": "ext_2G4_channel_multiatt-bde72a57384dde7a4310bcf3843469401be93074",
+      "west_path": "tools/bsim/components/ext_2G4_channel_multiatt"
+    },
+    "babblesim_ext_2G4_modem_magic": {
+      "repository": "BabbleSim/ext_2G4_modem_magic",
+      "revision": "cb70771794f0bf6f262aa474848611c68ae8f1ed",
+      "url": "https://codeload.github.com/BabbleSim/ext_2G4_modem_magic/tar.gz/cb70771794f0bf6f262aa474848611c68ae8f1ed",
+      "sha256": "fe84438516f2afabfd8c3f3716e4515dc5c091ffbc31968a5275a616cb369e42",
+      "strip_prefix": "ext_2G4_modem_magic-cb70771794f0bf6f262aa474848611c68ae8f1ed",
+      "west_path": "tools/bsim/components/ext_2G4_modem_magic"
+    },
+    "babblesim_ext_2G4_modem_BLE_simple": {
+      "repository": "BabbleSim/ext_2G4_modem_BLE_simple",
+      "revision": "809ab073159c9ab6686c2fea5749b0702e0909f7",
+      "url": "https://codeload.github.com/BabbleSim/ext_2G4_modem_BLE_simple/tar.gz/809ab073159c9ab6686c2fea5749b0702e0909f7",
+      "sha256": "b3bc996143ee3a60829b406bb953cf350397a0f8b4fdb8c52dc6b64b82b93b3b",
+      "strip_prefix": "ext_2G4_modem_BLE_simple-809ab073159c9ab6686c2fea5749b0702e0909f7",
+      "west_path": "tools/bsim/components/ext_2G4_modem_BLE_simple"
+    },
+    "babblesim_ext_2G4_device_burst_interferer": {
+      "repository": "BabbleSim/ext_2G4_device_burst_interferer",
+      "revision": "5b5339351d6e6a2368c686c734dc8b2fc65698fc",
+      "url": "https://codeload.github.com/BabbleSim/ext_2G4_device_burst_interferer/tar.gz/5b5339351d6e6a2368c686c734dc8b2fc65698fc",
+      "sha256": "891a580e32beefced758d0e45fe05d09cbb0670867c51c678d136dbf7f669d79",
+      "strip_prefix": "ext_2G4_device_burst_interferer-5b5339351d6e6a2368c686c734dc8b2fc65698fc",
+      "west_path": "tools/bsim/components/ext_2G4_device_burst_interferer"
+    },
+    "babblesim_ext_2G4_device_WLAN_actmod": {
+      "repository": "BabbleSim/ext_2G4_device_WLAN_actmod",
+      "revision": "9cb6d8e72695f6b785e57443f0629a18069d6ce4",
+      "url": "https://codeload.github.com/BabbleSim/ext_2G4_device_WLAN_actmod/tar.gz/9cb6d8e72695f6b785e57443f0629a18069d6ce4",
+      "sha256": "f66a500d90696fd101af2a352009c298c3cd9cb4401a1ddfc1f035dda7674233",
+      "strip_prefix": "ext_2G4_device_WLAN_actmod-9cb6d8e72695f6b785e57443f0629a18069d6ce4",
+      "west_path": "tools/bsim/components/ext_2G4_device_WLAN_actmod"
+    },
+    "babblesim_ext_2G4_device_playback": {
+      "repository": "BabbleSim/ext_2G4_device_playback",
+      "revision": "85c645929cf1ce995d8537107d9dcbd12ed64036",
+      "url": "https://codeload.github.com/BabbleSim/ext_2G4_device_playback/tar.gz/85c645929cf1ce995d8537107d9dcbd12ed64036",
+      "sha256": "116436cfb6ee5c19184a69ae2186e6d8fd48a3b29aa1a790c7058a711b1e004f",
+      "strip_prefix": "ext_2G4_device_playback-85c645929cf1ce995d8537107d9dcbd12ed64036",
+      "west_path": "tools/bsim/components/ext_2G4_device_playback"
+    },
+    "babblesim_ext_libCryptov1": {
+      "repository": "BabbleSim/ext_libCryptov1",
+      "revision": "eed6d7038e839153e340bd333bc43541cb90ba64",
+      "url": "https://codeload.github.com/BabbleSim/ext_libCryptov1/tar.gz/eed6d7038e839153e340bd333bc43541cb90ba64",
+      "sha256": "a476b61cb2c6009bdf7829da1b92a68ffbbe3892867537ccaa82899243ea0059",
+      "strip_prefix": "ext_libCryptov1-eed6d7038e839153e340bd333bc43541cb90ba64",
+      "west_path": "tools/bsim/components/ext_libCryptov1"
+    },
+    "canopennode": {
+      "repository": "zephyrproject-rtos/canopennode",
+      "revision": "dec12fa3f0d790cafa8414a4c2930ea71ab72ffd",
+      "url": "https://codeload.github.com/zephyrproject-rtos/canopennode/tar.gz/dec12fa3f0d790cafa8414a4c2930ea71ab72ffd",
+      "sha256": "1c8e4be05101a49bc621334bcc24f32269b210a7d34c37c4cce132a9bcd42980",
+      "strip_prefix": "canopennode-dec12fa3f0d790cafa8414a4c2930ea71ab72ffd",
+      "west_path": "modules/lib/canopennode"
+    },
+    "cmsis": {
+      "repository": "zephyrproject-rtos/cmsis",
+      "revision": "5a00331455dd74e31e80efa383a489faea0590e3",
+      "url": "https://codeload.github.com/zephyrproject-rtos/cmsis/tar.gz/5a00331455dd74e31e80efa383a489faea0590e3",
+      "sha256": "63f314b2090805aaf8100ec0c10b8e35532f53d7ef64b5366a9fdf146d1c742b",
+      "strip_prefix": "cmsis-5a00331455dd74e31e80efa383a489faea0590e3",
+      "west_path": "modules/hal/cmsis"
+    },
+    "cmsis-dsp": {
+      "repository": "zephyrproject-rtos/cmsis-dsp",
+      "revision": "ff7b5fd1ea5f094665c090c343ec44e74dc0b193",
+      "url": "https://codeload.github.com/zephyrproject-rtos/cmsis-dsp/tar.gz/ff7b5fd1ea5f094665c090c343ec44e74dc0b193",
+      "sha256": "de2802606e7f884c36d212a8ce7124ae79ae1517f1211fe1f01de9aafa19ef77",
+      "strip_prefix": "cmsis-dsp-ff7b5fd1ea5f094665c090c343ec44e74dc0b193",
+      "west_path": "modules/lib/cmsis-dsp"
+    },
+    "cmsis-nn": {
+      "repository": "zephyrproject-rtos/cmsis-nn",
+      "revision": "0c8669d81381ccf3b1a01d699f3b68b50134a99f",
+      "url": "https://codeload.github.com/zephyrproject-rtos/cmsis-nn/tar.gz/0c8669d81381ccf3b1a01d699f3b68b50134a99f",
+      "sha256": "f879cbfccbe5b78bdd9a494737a9256f40cf7140b60cc1c447eb8a8af3fac68e",
+      "strip_prefix": "cmsis-nn-0c8669d81381ccf3b1a01d699f3b68b50134a99f",
+      "west_path": "modules/lib/cmsis-nn"
+    },
+    "fatfs": {
+      "repository": "zephyrproject-rtos/fatfs",
+      "revision": "427159bf95ea49b7680facffaa29ad506b42709b",
+      "url": "https://codeload.github.com/zephyrproject-rtos/fatfs/tar.gz/427159bf95ea49b7680facffaa29ad506b42709b",
+      "sha256": "765cd81513a89d515b3e8f0d525ed539f3cc59da5f0692bf23179a5d08699805",
+      "strip_prefix": "fatfs-427159bf95ea49b7680facffaa29ad506b42709b",
+      "west_path": "modules/fs/fatfs"
+    },
+    "hal_ambiq": {
+      "repository": "zephyrproject-rtos/hal_ambiq",
+      "revision": "0a7c99325aa73a1ef777501da91c2c6608661e56",
+      "url": "https://codeload.github.com/zephyrproject-rtos/hal_ambiq/tar.gz/0a7c99325aa73a1ef777501da91c2c6608661e56",
+      "sha256": "6168380f4b18844eb6b7d50cc46d0b581383838f2fc766ba012546584f517c2b",
+      "strip_prefix": "hal_ambiq-0a7c99325aa73a1ef777501da91c2c6608661e56",
+      "west_path": "modules/hal/ambiq"
+    },
+    "hal_atmel": {
+      "repository": "zephyrproject-rtos/hal_atmel",
+      "revision": "5ab43007eda3f380c125f957f03638d2e8d1144d",
+      "url": "https://codeload.github.com/zephyrproject-rtos/hal_atmel/tar.gz/5ab43007eda3f380c125f957f03638d2e8d1144d",
+      "sha256": "5108fb5e858fd79727f7f6b6f3d02ff51627bef0f341be80c40cd4df4764aaa0",
+      "strip_prefix": "hal_atmel-5ab43007eda3f380c125f957f03638d2e8d1144d",
+      "west_path": "modules/hal/atmel"
+    },
+    "hal_espressif": {
+      "repository": "zephyrproject-rtos/hal_espressif",
+      "revision": "31fc5758f3507f8f0af00b1dea1a0df7af99bfc0",
+      "url": "https://codeload.github.com/zephyrproject-rtos/hal_espressif/tar.gz/31fc5758f3507f8f0af00b1dea1a0df7af99bfc0",
+      "sha256": "d95e9bfb61f90c15571c1f952aa66e979c6737b4dd2120a7a7c878be982453ea",
+      "strip_prefix": "hal_espressif-31fc5758f3507f8f0af00b1dea1a0df7af99bfc0",
+      "west_path": "modules/hal/espressif"
+    },
+    "hal_ethos_u": {
+      "repository": "zephyrproject-rtos/hal_ethos_u",
+      "revision": "90ada2ea5681b2a2722a10d2898eac34c2510791",
+      "url": "https://codeload.github.com/zephyrproject-rtos/hal_ethos_u/tar.gz/90ada2ea5681b2a2722a10d2898eac34c2510791",
+      "sha256": "12a4510acebbefcfee9a17d9939942a19154f413ac5eca9b6f387a6a226c9d7a",
+      "strip_prefix": "hal_ethos_u-90ada2ea5681b2a2722a10d2898eac34c2510791",
+      "west_path": "modules/hal/ethos_u"
+    },
+    "hal_gigadevice": {
+      "repository": "zephyrproject-rtos/hal_gigadevice",
+      "revision": "2994b7dde8b0b0fa9b9c0ccb13474b6a486cddc3",
+      "url": "https://codeload.github.com/zephyrproject-rtos/hal_gigadevice/tar.gz/2994b7dde8b0b0fa9b9c0ccb13474b6a486cddc3",
+      "sha256": "7ce115bdf43fe0c8981cd880ccbcf9a4c223f2af663bfa701134a09111056d3f",
+      "strip_prefix": "hal_gigadevice-2994b7dde8b0b0fa9b9c0ccb13474b6a486cddc3",
+      "west_path": "modules/hal/gigadevice"
+    },
+    "hal_intel": {
+      "repository": "zephyrproject-rtos/hal_intel",
+      "revision": "b3b43d4e3da7ba483611bbbea7ef8af92c69df31",
+      "url": "https://codeload.github.com/zephyrproject-rtos/hal_intel/tar.gz/b3b43d4e3da7ba483611bbbea7ef8af92c69df31",
+      "sha256": "84e20e6215c3fc4a349a6d1851c70ad46c86f245caff05eed77f15057502d6c9",
+      "strip_prefix": "hal_intel-b3b43d4e3da7ba483611bbbea7ef8af92c69df31",
+      "west_path": "modules/hal/intel"
+    },
+    "hal_nordic": {
+      "repository": "zephyrproject-rtos/hal_nordic",
+      "revision": "884c4d61746bc35fbd379c169fc87ddb56c6461d",
+      "url": "https://codeload.github.com/zephyrproject-rtos/hal_nordic/tar.gz/884c4d61746bc35fbd379c169fc87ddb56c6461d",
+      "sha256": "97fc466d8bc1ec8dc39a15c017b71759c709a954403382757178651e97c22387",
+      "strip_prefix": "hal_nordic-884c4d61746bc35fbd379c169fc87ddb56c6461d",
+      "west_path": "modules/hal/nordic"
+    },
+    "hal_nuvoton": {
+      "repository": "zephyrproject-rtos/hal_nuvoton",
+      "revision": "3e0a4c4d3328b2f72b164219add19d5308b53cb5",
+      "url": "https://codeload.github.com/zephyrproject-rtos/hal_nuvoton/tar.gz/3e0a4c4d3328b2f72b164219add19d5308b53cb5",
+      "sha256": "b1786f5a6758ef8b6b28f0d4382592e091b825fd302a4d2f3678316a1e0203a5",
+      "strip_prefix": "hal_nuvoton-3e0a4c4d3328b2f72b164219add19d5308b53cb5",
+      "west_path": "modules/hal/nuvoton"
+    },
+    "hal_quicklogic": {
+      "repository": "zephyrproject-rtos/hal_quicklogic",
+      "revision": "b3a66fe6d04d87fd1533a5c8de51d0599fcd08d0",
+      "url": "https://codeload.github.com/zephyrproject-rtos/hal_quicklogic/tar.gz/b3a66fe6d04d87fd1533a5c8de51d0599fcd08d0",
+      "sha256": "f14c995ab2ed07126f9a1e0a22f7fcceb835d4b709742f39d9be594b8fe482a7",
+      "strip_prefix": "hal_quicklogic-b3a66fe6d04d87fd1533a5c8de51d0599fcd08d0",
+      "west_path": "modules/hal/quicklogic"
+    },
+    "hal_renesas": {
+      "repository": "zephyrproject-rtos/hal_renesas",
+      "revision": "a6cf2af9140e014fbbc48d2b6deb802231dd369f",
+      "url": "https://codeload.github.com/zephyrproject-rtos/hal_renesas/tar.gz/a6cf2af9140e014fbbc48d2b6deb802231dd369f",
+      "sha256": "57ffd0f655c546bec8f24fbda532ddddbb5a43ffa30a88afc5b83e5ca787c01e",
+      "strip_prefix": "hal_renesas-a6cf2af9140e014fbbc48d2b6deb802231dd369f",
+      "west_path": "modules/hal/renesas"
+    },
+    "hal_rpi_pico": {
+      "repository": "zephyrproject-rtos/hal_rpi_pico",
+      "revision": "fba7162cc7bee06d0149622bbcaac4e41062d368",
+      "url": "https://codeload.github.com/zephyrproject-rtos/hal_rpi_pico/tar.gz/fba7162cc7bee06d0149622bbcaac4e41062d368",
+      "sha256": "baf5e8092286120a61cbe0dcf6016f36d7ac324073fcf48e5b0e0c155177c934",
+      "strip_prefix": "hal_rpi_pico-fba7162cc7bee06d0149622bbcaac4e41062d368",
+      "west_path": "modules/hal/rpi_pico"
+    },
+    "hal_stm32": {
+      "repository": "zephyrproject-rtos/hal_stm32",
+      "revision": "89ef0a3383edebf661073073bcdf6e2836fe90ee",
+      "url": "https://codeload.github.com/zephyrproject-rtos/hal_stm32/tar.gz/89ef0a3383edebf661073073bcdf6e2836fe90ee",
+      "sha256": "e568b661f5dfee00c5a7f00ca9a07dc788c22210d1fcb6d334bc1e479fbd2b7a",
+      "strip_prefix": "hal_stm32-89ef0a3383edebf661073073bcdf6e2836fe90ee",
+      "west_path": "modules/hal/stm32"
+    },
+    "hal_telink": {
+      "repository": "zephyrproject-rtos/hal_telink",
+      "revision": "38573af589173259801ae6c2b34b7d4c9e626746",
+      "url": "https://codeload.github.com/zephyrproject-rtos/hal_telink/tar.gz/38573af589173259801ae6c2b34b7d4c9e626746",
+      "sha256": "76f07190eea77c3cb8ebd8f11798fb938692940a98a07608aa7f19f931b97fef",
+      "strip_prefix": "hal_telink-38573af589173259801ae6c2b34b7d4c9e626746",
+      "west_path": "modules/hal/telink"
+    },
+    "hal_wurthelektronik": {
+      "repository": "zephyrproject-rtos/hal_wurthelektronik",
+      "revision": "24ca9873c3d608fad1fea0431836bc8f144c132e",
+      "url": "https://codeload.github.com/zephyrproject-rtos/hal_wurthelektronik/tar.gz/24ca9873c3d608fad1fea0431836bc8f144c132e",
+      "sha256": "2567c3deeae69765eb7a671d76d44c76b421f08ada54ff6c7b8ac664916c3f18",
+      "strip_prefix": "hal_wurthelektronik-24ca9873c3d608fad1fea0431836bc8f144c132e",
+      "west_path": "modules/hal/wurthelektronik"
+    },
+    "libmetal": {
+      "repository": "zephyrproject-rtos/libmetal",
+      "revision": "b91611a6f47dd29fb24c46e5621e797557f80ec6",
+      "url": "https://codeload.github.com/zephyrproject-rtos/libmetal/tar.gz/b91611a6f47dd29fb24c46e5621e797557f80ec6",
+      "sha256": "7e27a8976c1a74dc4dc5029237f72f432bcfea8531fa51ce835d2c2122e499b7",
+      "strip_prefix": "libmetal-b91611a6f47dd29fb24c46e5621e797557f80ec6",
+      "west_path": "modules/hal/libmetal"
+    },
+    "liblc3": {
+      "repository": "zephyrproject-rtos/liblc3",
+      "revision": "448f3de31f49a838988a162ef1e23a89ddf2d2ed",
+      "url": "https://codeload.github.com/zephyrproject-rtos/liblc3/tar.gz/448f3de31f49a838988a162ef1e23a89ddf2d2ed",
+      "sha256": "b26f80aef1f3de937497e938a149b606b836b2c8778bc2c3d2dcbf3f93bd3781",
+      "strip_prefix": "liblc3-448f3de31f49a838988a162ef1e23a89ddf2d2ed",
+      "west_path": "modules/lib/liblc3"
+    },
+    "littlefs": {
+      "repository": "zephyrproject-rtos/littlefs",
+      "revision": "ca583fd297ceb48bced3c2548600dc615d67af24",
+      "url": "https://codeload.github.com/zephyrproject-rtos/littlefs/tar.gz/ca583fd297ceb48bced3c2548600dc615d67af24",
+      "sha256": "17fd07470661369a357ed14fd53f8732fff804bded8a1f7b2498054f15f87138",
+      "strip_prefix": "littlefs-ca583fd297ceb48bced3c2548600dc615d67af24",
+      "west_path": "modules/fs/littlefs"
+    },
+    "lvgl": {
+      "repository": "zephyrproject-rtos/lvgl",
+      "revision": "8a6a2d1d29d17d1e4bdc94c243c146a39d635fdd",
+      "url": "https://codeload.github.com/zephyrproject-rtos/lvgl/tar.gz/8a6a2d1d29d17d1e4bdc94c243c146a39d635fdd",
+      "sha256": "26468bc82fc19137563e2c49acdc2439feddb32766c2b7d5bc136e9c068f5d33",
+      "strip_prefix": "lvgl-8a6a2d1d29d17d1e4bdc94c243c146a39d635fdd",
+      "west_path": "modules/lib/gui/lvgl"
+    },
+    "mbedtls": {
+      "repository": "zephyrproject-rtos/mbedtls",
+      "revision": "c38dc78d9a8dcbe43b898cc1171ab33ba3e6fc26",
+      "url": "https://codeload.github.com/zephyrproject-rtos/mbedtls/tar.gz/c38dc78d9a8dcbe43b898cc1171ab33ba3e6fc26",
+      "sha256": "ccf20cd26fb130c2f4fb30b2ef2ed2e9557905152d5bdd0e12cd5ca7bea7e351",
+      "strip_prefix": "mbedtls-c38dc78d9a8dcbe43b898cc1171ab33ba3e6fc26",
+      "west_path": "modules/crypto/mbedtls"
+    },
+    "mipi-sys-t": {
+      "repository": "zephyrproject-rtos/mipi-sys-t",
+      "revision": "a819419603a2dfcb47f7f39092e1bc112e45d1ef",
+      "url": "https://codeload.github.com/zephyrproject-rtos/mipi-sys-t/tar.gz/a819419603a2dfcb47f7f39092e1bc112e45d1ef",
+      "sha256": "1e3922ae2425a1eaff2b6d5e4b442871d8062d11f6a2ec7e2c994e5653bbdbe5",
+      "strip_prefix": "mipi-sys-t-a819419603a2dfcb47f7f39092e1bc112e45d1ef",
+      "west_path": "modules/debug/mipi-sys-t"
+    },
+    "nrf_hw_models": {
+      "repository": "zephyrproject-rtos/nrf_hw_models",
+      "revision": "f4595802d32d103718bf50b3d390b7a450895843",
+      "url": "https://codeload.github.com/zephyrproject-rtos/nrf_hw_models/tar.gz/f4595802d32d103718bf50b3d390b7a450895843",
+      "sha256": "5c74acd5d58e1f4938bc45a8abf5b9f61c978db080da3b7b6a117ffb7ec622ea",
+      "strip_prefix": "nrf_hw_models-f4595802d32d103718bf50b3d390b7a450895843",
+      "west_path": "modules/bsim_hw_models/nrf_hw_models"
+    },
+    "open-amp": {
+      "repository": "zephyrproject-rtos/open-amp",
+      "revision": "42b7c577714b8f22ce82a901e19c1814af4609a8",
+      "url": "https://codeload.github.com/zephyrproject-rtos/open-amp/tar.gz/42b7c577714b8f22ce82a901e19c1814af4609a8",
+      "sha256": "2db53ef45578b75be61ab336ae1a35f173f50358feeb9c30538ee4d07d2c41b7",
+      "strip_prefix": "open-amp-42b7c577714b8f22ce82a901e19c1814af4609a8",
+      "west_path": "modules/lib/open-amp"
+    },
+    "percepio": {
+      "repository": "zephyrproject-rtos/percepio",
+      "revision": "a3728efccc47dd372f40e6313589ca4c5cc7d5e9",
+      "url": "https://codeload.github.com/zephyrproject-rtos/percepio/tar.gz/a3728efccc47dd372f40e6313589ca4c5cc7d5e9",
+      "sha256": "3178fdc1c0257babc42b023aa4c254b1a94bc2e6c557212c91bd1a7585f047f5",
+      "strip_prefix": "percepio-a3728efccc47dd372f40e6313589ca4c5cc7d5e9",
+      "west_path": "modules/debug/percepio"
+    },
+    "picolibc": {
+      "repository": "zephyrproject-rtos/picolibc",
+      "revision": "d07c38ff051386f8e09a143ea0a6c1d6d66dd1d8",
+      "url": "https://codeload.github.com/zephyrproject-rtos/picolibc/tar.gz/d07c38ff051386f8e09a143ea0a6c1d6d66dd1d8",
+      "sha256": "a19036f86a01a543cd788b6be5fb505e0df943483a283f1735571794030062d5",
+      "strip_prefix": "picolibc-d07c38ff051386f8e09a143ea0a6c1d6d66dd1d8",
+      "west_path": "modules/lib/picolibc"
+    },
+    "segger": {
+      "repository": "zephyrproject-rtos/segger",
+      "revision": "9d0191285956cef43daf411edc2f1a7788346def",
+      "url": "https://codeload.github.com/zephyrproject-rtos/segger/tar.gz/9d0191285956cef43daf411edc2f1a7788346def",
+      "sha256": "bbb79b581d204eec8c5de870f7d12dd57a0d3639b402fde1b86edf6eb6d762aa",
+      "strip_prefix": "segger-9d0191285956cef43daf411edc2f1a7788346def",
+      "west_path": "modules/debug/segger"
+    },
+    "tinycrypt": {
+      "repository": "zephyrproject-rtos/tinycrypt",
+      "revision": "3e9a49d2672ec01435ffbf0d788db6d95ef28de0",
+      "url": "https://codeload.github.com/zephyrproject-rtos/tinycrypt/tar.gz/3e9a49d2672ec01435ffbf0d788db6d95ef28de0",
+      "sha256": "56af8bc9ac0dbcebe9e80356deed5a25920b7ebd8605b01990ac22284daa8872",
+      "strip_prefix": "tinycrypt-3e9a49d2672ec01435ffbf0d788db6d95ef28de0",
+      "west_path": "modules/crypto/tinycrypt"
+    },
+    "trusted-firmware-a": {
+      "repository": "zephyrproject-rtos/trusted-firmware-a",
+      "revision": "421dc050278287839f5c70019bd6aec617f2bbdb",
+      "url": "https://codeload.github.com/zephyrproject-rtos/trusted-firmware-a/tar.gz/421dc050278287839f5c70019bd6aec617f2bbdb",
+      "sha256": "9bf3ee74e17f5685045a10a2f082edde830e04c3000b79d00b8608e6d4c230d3",
+      "strip_prefix": "trusted-firmware-a-421dc050278287839f5c70019bd6aec617f2bbdb",
+      "west_path": "modules/tee/tf-a/trusted-firmware-a"
+    },
+    "uoscore-uedhoc": {
+      "repository": "zephyrproject-rtos/uoscore-uedhoc",
+      "revision": "5fe2cb613bd7e4590bd1b00c2adf181ac0229379",
+      "url": "https://codeload.github.com/zephyrproject-rtos/uoscore-uedhoc/tar.gz/5fe2cb613bd7e4590bd1b00c2adf181ac0229379",
+      "sha256": "dc7c30ae6e3bb8a5d59759f8f926256e8e475bd01e677b3650b4877d9f2372b2",
+      "strip_prefix": "uoscore-uedhoc-5fe2cb613bd7e4590bd1b00c2adf181ac0229379",
+      "west_path": "modules/lib/uoscore-uedhoc"
+    },
+    "zcbor": {
+      "repository": "zephyrproject-rtos/zcbor",
+      "revision": "67fd8bb88d3136738661fa8bb5f9989103f4599e",
+      "url": "https://codeload.github.com/zephyrproject-rtos/zcbor/tar.gz/67fd8bb88d3136738661fa8bb5f9989103f4599e",
+      "sha256": "8f508f6a7f28076cd9ce7df8ab8afa689f8b9230a9ee7d36add7fa2f4d3f9713",
+      "strip_prefix": "zcbor-67fd8bb88d3136738661fa8bb5f9989103f4599e",
+      "west_path": "modules/lib/zcbor"
+    }
+  }
+}

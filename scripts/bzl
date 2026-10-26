@@ -1,0 +1,111 @@
+#!/usr/bin/env python3
+"""Run Bazel in the same pinned Linux amd64 environment on workstations and CI."""
+
+import hashlib
+import os
+from pathlib import Path
+import subprocess
+import sys
+import tempfile
+import urllib.request
+
+
+ROOT = Path(__file__).resolve().parent.parent
+IMAGE = (ROOT / "scripts/bazel/builder-image").read_text().strip()
+BAZELISK_SHA256 = "a248ae2b2b62b5baebb748f6fba7203bff1a27e5d01b55399a8406744cb539e8"
+CACHE_HOST = "bazel-cache.wallintech.eu"
+
+
+def main():
+    if len(sys.argv) < 2:
+        sys.exit("Usage: ./scripts/bzl <build|test|query|...> [Bazel arguments]")
+    state = Path(os.environ.get("ADV_BAZEL_STATE", ROOT / ".local/bazel")).resolve()
+    state.mkdir(parents=True, exist_ok=True)
+    bootstrap = state / "bazelisk"
+    if not bootstrap.exists():
+        with urllib.request.urlopen(
+            "https://github.com/bazelbuild/bazelisk/releases/download/v1.30.0/bazelisk-linux-amd64"
+        ) as response:
+            payload = response.read()
+        if hashlib.sha256(payload).hexdigest() != BAZELISK_SHA256:
+            sys.exit("Bazelisk checksum mismatch")
+        with tempfile.NamedTemporaryFile(prefix="bazelisk-", dir=state, delete=False) as downloaded:
+            downloaded.write(payload)
+        Path(downloaded.name).replace(bootstrap)
+    if hashlib.sha256(bootstrap.read_bytes()).hexdigest() != BAZELISK_SHA256:
+        sys.exit("Cached Bazelisk checksum mismatch")
+    bootstrap.chmod(0o755)
+
+    mode = os.environ.get("ADV_BAZEL_CACHE", "write" if not os.environ.get("CI") else "read")
+    if mode not in {"read", "write", "off"}:
+        sys.exit("ADV_BAZEL_CACHE must be read, write or off")
+    credential = os.environ.get("PERSONAL_BAZEL_CACHE_CREDENTIAL", "")
+    if not credential and mode != "off":
+        role = "writer" if mode == "write" else "reader"
+        path = Path(os.environ.get(
+            "ADV_BAZEL_CREDENTIAL_FILE",
+            Path.home() / f".config/personal-bazel-cache/bazel-cache-{role}.credential",
+        ))
+        if path.is_file():
+            credential = path.read_text().strip()
+    if (not credential and mode == "write" and "ADV_BAZEL_CACHE" not in os.environ
+            and not os.environ.get("CI") and "ADV_BAZEL_CREDENTIAL_FILE" not in os.environ):
+        reader = Path.home() / ".config/personal-bazel-cache/bazel-cache-reader.credential"
+        if reader.is_file():
+            credential = reader.read_text().strip()
+            if credential:
+                mode = "read"
+    if not credential and mode != "off":
+        print("No cache credential available; building without the remote cache.", file=sys.stderr)
+        mode = "off"
+
+    # Keep credentials out of argv, action environments, logs and source files.
+    with tempfile.TemporaryDirectory(prefix="credential-", dir=state) as private:
+        secret = Path(private) / "credential"
+        secret.write_text(credential)
+        secret.chmod(0o600)
+        command = [
+            "docker", "run", "--rm", "--platform=linux/amd64",
+            "--user", f"{os.getuid()}:{os.getgid()}",
+            "--workdir", "/workspace", "--env", "HOME=/state/home",
+            "--env", "BAZELISK_HOME=/state/bazelisk-home",
+            "--env", "BAZELISK_VERIFY_SHA256=4dc8e99dfa802e252dac176d08201fd15c542ae78c448c8a89974b6f387c282c",
+            "--mount", f"type=bind,src={ROOT},dst=/workspace",
+            "--mount", f"type=bind,src={state},dst=/state",
+            "--mount", f"type=bind,src={secret},dst=/run/bazel-cache-credential,readonly",
+        ]
+        address = os.environ.get("ADV_BAZEL_CACHE_ADDRESS", "10.10.40.202")
+        if address:
+            command += ["--add-host", f"{CACHE_HOST}:{address}"]
+        command += [IMAGE, "/state/bazelisk", "--batch", "--output_user_root=/state/output"]
+        verb, *arguments = sys.argv[1:]
+        command.append(verb)
+        if os.environ.get("CI"):
+            command.append("--lockfile_mode=error")
+        if verb in {"build", "test", "run", "cquery", "aquery", "coverage"}:
+            identity = os.environ.get("ADV_BAZEL_CACHE_SALT", "v1") + ":" + IMAGE
+            command += [
+                f"--remote_default_exec_properties=tf-builder={identity}",
+                f"--action_env=TF_BUILDER_IMAGE={identity}",
+                f"--host_action_env=TF_BUILDER_IMAGE={identity}",
+            ]
+            if mode != "off":
+                command += [
+                    f"--remote_cache=https://{CACHE_HOST}",
+                    f"--credential_helper={CACHE_HOST}=/workspace/scripts/bazel/credential-helper",
+                    "--remote_upload_local_results=" + str(mode == "write").lower(),
+                ]
+        if os.environ.get("ADV_BAZEL_EXPORT") == "1":
+            paths = os.environ.get("ADV_BAZEL_EXPORT_PATHS")
+            if not paths:
+                sys.exit("ADV_BAZEL_EXPORT=1 requires ADV_BAZEL_EXPORT_PATHS as a JSON array of named artifact files")
+            split = command.index(IMAGE) + 1
+            command = command[:split] + [
+                "python3", "/workspace/scripts/bazel/export-artifacts",
+                "/workspace/bazel-bin", "/state/artifacts", paths,
+            ] + command[split:]
+        return subprocess.call(command + arguments)
+
+
+if __name__ == "__main__":
+    sys.exit(main())
