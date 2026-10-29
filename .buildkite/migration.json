@@ -1,0 +1,40 @@
+{
+  "retire": [
+    ".github/workflows/build.yml"
+  ],
+  "schedules": [
+    {
+      "cron": "17 1 * * 1",
+      "branch": "V3.0",
+      "workflow": "ci"
+    }
+  ],
+  "events": {
+    "push": [
+      "V3.0"
+    ],
+    "tags": [
+      "**"
+    ],
+    "pull_request": [
+      "opened",
+      "synchronize",
+      "reopened",
+      "ready_for_review"
+    ],
+    "release": [
+      "published"
+    ],
+    "workflow_dispatch": [
+      "ci"
+    ]
+  },
+  "credentials": [
+    "PB_BAZEL_CACHE_READER: read-only personal Bazel cache"
+  ],
+  "repository": "MrTrigger/Adv360-Pro-ZMK",
+  "defaultBranch": "V3.0",
+  "sourceRevision": "f35fc1c2210f98ea2243f7154422bcf78cdcf8e6",
+  "hosted": [],
+  "forkPullRequests": false
+}
